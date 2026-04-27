@@ -35,6 +35,5 @@ const restaurantSchema = new mongoose.Schema({
 
 restaurantSchema.index({ owner: 1 });
 restaurantSchema.index({ status: 1 });
-restaurantSchema.index({ tenantId: 1 });
 
 module.exports = mongoose.model('Restaurant', restaurantSchema);

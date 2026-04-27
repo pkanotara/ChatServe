@@ -1,0 +1,494 @@
+\documentclass[12pt,a4paper]{report}
+
+% ─── Packages ─────────────────────────────────────────────────────────────────
+\usepackage[a4paper, left=1.5in, right=1in, top=1in, bottom=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tabularx}
+\usepackage{setspace}
+\usepackage{tocloft}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{ragged2e}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{times}
+\usepackage{enumitem}
+\usepackage{multirow}
+\usepackage{makecell}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage[nottoc]{tocbibind}
+\usepackage{parskip}
+\usepackage{array}
+\usepackage[T1]{fontenc}
+\usepackage{caption}
+\captionsetup[lstlisting]{position=bottom}
+\renewcommand{\arraystretch}{1.2}
+\usepackage{listings}
+\lstset{captionpos=b}
+
+\usepackage{pifont}
+\newcommand{\cmark}{\ding{51}}
+\newcommand{\xmark}{\ding{55}}
+
+
+% ─── Hyperref Setup ───────────────────────────────────────────────────────────
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=blue,
+    citecolor=black,
+    pdftitle={ChatServe: Framework for WhatsApp-Based Small Business Automation},
+    pdfauthor={Pravin Kanotara},
+}
+
+% ─── Spacing and Layout ───────────────────────────────────────────────────────
+\onehalfspacing
+\setlength{\parskip}{6pt}
+\setlength{\parindent}{0pt}
+
+% ─── Chapter and Section Formatting ──────────────────────────────────────────
+\titleformat{\chapter}[display]
+  {\normalfont\Large\bfseries\centering}
+  {Chapter \thechapter}{10pt}{\LARGE}
+\titlespacing*{\chapter}{0pt}{20pt}{30pt}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries\itshape}{\thesubsubsection}{1em}{}
+
+% ─── Header / Footer ──────────────────────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\leftmark}
+\fancyhead[R]{\small ChatServe}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% ─── Code Listing Style ───────────────────────────────────────────────────────
+\lstdefinestyle{codestyle}{
+    backgroundcolor=\color{gray!8},
+    commentstyle=\color{green!55!black},
+    keywordstyle=\color{blue!80!black},
+    numberstyle=\tiny\color{gray},
+    stringstyle=\color{orange!80!black},
+    basicstyle=\ttfamily\footnotesize,
+    breaklines=true,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    frame=single,
+    rulecolor=\color{gray!40},
+    tabsize=2,
+}
+\lstset{style=codestyle}
+
+% ─── Custom Commands ──────────────────────────────────────────────────────────
+\newcommand{\projecttitle}{ChatServe: A Framework for WhatsApp-Based Small Business Automation}
+\newcommand{\studentname}{Pravin\ Kanotara}
+\newcommand{\rollno}{22BCE139}
+\newcommand{\guidename}{Prof.\ Monika Shah}
+\newcommand{\hodname}{Dr.\ Ankit Thakkar}
+\newcommand{\dept}{Computer Science and Engineering}
+\newcommand{\university}{Nirma University}
+\newcommand{\submityear}{April 2026}
+
+% ══════════════════════════════════════════════════════════════════════════════
+\begin{document}
+% ══════════════════════════════════════════════════════════════════════════════
+
+\pagenumbering{roman}
+
+% ══════════════════════════════════════════════════════════════════════════════
+% FRONT MATTER
+% ══════════════════════════════════════════════════════════════════════════════
+
+% ─── Title Page 1 — Simple Cover ─────────────────────────────────────────────
+% TITLE PAGE
+
+\thispagestyle{empty}
+\begin{center}
+{\huge ChatServe: A Framework for WhatsApp-Based Small Business Automation }\vspace{.05in}\\
+
+\vspace{4cm}
+
+Submitted By\\
+{\large \bf Pravin Kanotara} \\
+{\bf 22BCE139} \\
+\vspace{4cm}
+
+\begin{figure}[h]
+\begin{center}
+  \includegraphics[scale=0.8]{Diagrams/Logo.jpg}
+\end{center}
+\end{figure}
+
+{\bf DEPARTMENT OF COMPUTER SCIENCE AND ENGINEERING}\\
+{\bf INSTITUTE OF TECHNOLOGY}\\
+{\bf NIRMA UNIVERSITY}\\  
+{\bf AHMEDABAD-382481}\\ ~\\ ~\\
+{\bf April 2026}
+
+\end{center}
+
+% --------------------------------------------------------------------------------------------------------
+
+\newpage
+\thispagestyle{empty}
+\begin{center}
+
+{\huge ChatServe: A Framework for WhatsApp-Based Small Business Automation}\vspace{.05in}\\
+
+\vspace{1cm}
+{\large \bf Project Report}\\
+\vspace{0.5cm}
+
+{
+Submitted in partial fulfillment of the requirements\\
+\vspace{0.3cm}
+for the degree of\\
+\vspace{0.3cm}
+\bf Bachelor of Technology in Computer Science and Engineering\\
+}
+
+\vspace{0.3cm} By\\
+{\large \bf Pravin Kanotara} \\
+{\bf (22BCE139)} \\
+\vspace{0.4cm}
+
+Guided By \\
+{{\large\bf Prof. Monika Shah}} \\
+\bf DEPARTMENT OF COMPUTER SCIENCE AND ENGINEERING\\
+
+\vspace{3cm}
+\begin{figure}[h]
+\begin{center}
+  \includegraphics[scale=0.8]{Diagrams/Logo.jpg}
+\end{center}
+\end{figure}
+
+{\bf DEPARTMENT OF COMPUTER SCIENCE AND ENGINEERING}\\
+{\bf INSTITUTE OF TECHNOLOGY}\\
+{\bf NIRMA UNIVERSITY}\\
+{\bf AHMEDABAD-382481}\\ ~\\ ~\\
+{\bf April 2026}
+
+\end{center}
+
+
+
+
+% ─── Certificate ─────────────────────────────────────────────────────────────
+\newpage
+\thispagestyle{empty}
+\addcontentsline{toc}{chapter}{Certificate}
+\begin{center}
+\includegraphics[width=2.8in]{Diagrams/Logo.jpg}\\[1.2cm]
+{\Large\textbf{Certificate}}\\[1.2cm]
+\end{center}
+\begin{center}
+\begin{minipage}{0.99\textwidth}
+\justifying
+This is to certify that the project entitled \textbf{``\projecttitle''} submitted by \textbf{\studentname\ (\rollno)}, towards the partial fulfillment of the requirements for the award of the degree of Bachelor of Technology in \dept, \university, Ahmedabad, is the record of original work carried out by the candidate under our supervision and guidance. In our opinion, the submitted work has reached the level required for being accepted for examination.
+\end{minipage}
+\end{center}
+\vspace{3cm}
+\noindent
+\begin{minipage}[t]{0.47\textwidth}
+\textbf{\guidename}\\[0.3cm]
+Assistant Professor\\
+Department of \dept\\
+Institute of Technology\\
+\university, Ahmedabad
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.47\textwidth}
+\textbf{\hodname}\\[0.3cm]
+Professor and I/C Head\\
+Department of \dept\\
+Institute of Technology\\
+\university, Ahmedabad
+\end{minipage}
+\vspace{2cm}
+
+% ─── Statement of Originality ────────────────────────────────────────────────
+\newpage
+\thispagestyle{empty}
+\addcontentsline{toc}{chapter}{Statement of Originality}
+\begin{center}
+{\Large\textbf{Statement of Originality}}\\[0.5cm]
+\hrule\vspace{1cm}
+\end{center}
+\begin{center}
+\begin{minipage}{0.92\textwidth}
+\justifying
+I, \textbf{\studentname}, Roll No.\ \textbf{\rollno}, give an undertaking that the project entitled \textbf{``\projecttitle''} submitted by me towards the partial fulfillment of the requirements for the degree of Bachelor of Technology in \dept, \university, Ahmedabad, contains no material that has been awarded for any degree or diploma in any university or institution to the best of my knowledge.
+
+This is original work carried out by me and I give assurance that no attempt of plagiarism has been made. It contains no material that is previously published or written, except where proper references have been made. I understand that any similarity found subsequently with published or dissertation work may result in severe disciplinary action.
+\end{minipage}
+\end{center}
+\vspace{2.5cm}
+\noindent\rule{5cm}{0.4pt}\\
+Signature of Student\\[0.4cm]
+\textbf{\studentname}\\
+Roll No.: \rollno\\[0.5cm]
+\vspace{2.5cm}
+\begin{flushright}
+Endorsed by\\[0.3cm]
+\textbf{\guidename}\\
+(Signature of Guide)
+\end{flushright}
+
+% ─── Acknowledgement ─────────────────────────────────────────────────────────
+\newpage
+\addcontentsline{toc}{chapter}{Acknowledgement}
+\begin{center}{\Large\textbf{Acknowledgement}}\end{center}
+
+I would like to express my sincere gratitude to my project guide, \textbf{\guidename}, for her continuous support, constructive feedback, and patient guidance throughout this project. Her insights helped shape both the technical direction and the academic framing of this work.
+
+I am thankful to the \textbf{Department of Computer Science and Engineering, \university} for providing the infrastructure and the academic environment needed to carry out this project.
+
+I would like to acknowledge \textbf{Meta Platforms, Inc.} for making the WhatsApp Cloud API accessible to developers and providing comprehensive documentation that served as the technical backbone of this system.
+
+Finally, I am grateful to my family and friends whose encouragement kept me motivated throughout this journey.
+
+\vspace{1.5cm}
+\begin{flushright}
+\textbf{\studentname}\\
+\textbf{\rollno}\\
+\end{flushright}
+
+% ─── Abstract ────────────────────────────────────────────────────────────────
+\newpage
+\addcontentsline{toc}{chapter}{Abstract}
+\begin{center}
+{\Large\textbf{Abstract}}
+\end{center}
+\vspace{1em}
+
+This project presents the development of a web-based framework designed to support small-scale, home-based, and seasonal businesses in managing their operations efficiently. Although platforms like WhatsApp Business are commonly used for customer communication, they lack structured features for handling orders, service bookings, and data management.
+The proposed system follows a hybrid model, where business owners manage products, services, and customer data through a web application dashboard, while customers interact via WhatsApp. A chatbot-based interface is integrated to assist customers by responding to queries, displaying product or service information, enabling order placement or booking, and providing status updates.
+This approach combines the simplicity of chat-based communication with the efficiency of a structured backend system. The solution is designed to be user-friendly, lightweight, and accessible, helping small businesses improve customer experience, streamline operations, and adopt digital tools with minimal technical complexity.
+
+% ────────────────────
+\newpage
+\tableofcontents
+
+\newpage
+\listoffigures
+
+\newpage
+\listoftables
+
+% ══════════════════════════════════════════════════════════════════════════════
+% CHAPTERS
+% ══════════════════════════════════════════════════════════════════════════════
+\newpage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+\input{ch1_problem_context}    % Chapter 1 — Problem Context and Motivation
+\input{ch2_literature_review}  % Chapter 2 — Literature Review
+\input{ch3_existing_systems}   % Chapter 3 — Existing Systems, Use Case, DFD
+\input{ch4_proposed_framework} % Chapter 4 — Proposed Framework (all diagrams)
+\input{ch5_conclusion}         % Chapter 5 — Conclusion and Future Scope
+
+% ══════════════════════════════════════════════════════════════════════════════
+% BACK MATTER
+% ══════════════════════════════════════════════════════════════════════════════
+
+\appendix
+
+% ─── Appendix A — Tools and Technologies Used ────────────────────────────────
+\chapter{Appendix A: Tools and Technologies Used}
+
+\begin{table}[H]
+\centering
+\caption{Development Tools and Libraries}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\textwidth}{|l|l|X|}
+\hline
+\textbf{Tool / Library} & \textbf{Version} & \textbf{Purpose} \\
+\hline
+Node.js & 20.20.0 & Backend JavaScript runtime \\
+\hline
+Express.js & 4.19.2 & Web framework and API routing \\
+\hline
+MongoDB & 7.x & Primary NoSQL document database \\
+\hline
+Mongoose & 8.4.3 & MongoDB ODM with schema validation \\
+\hline
+React & 18.3.1 & Frontend SPA framework \\
+\hline
+Vite & 5.4.21 & Frontend build tool \\
+\hline
+Tailwind CSS & 3.4.4 & Utility-first CSS framework \\
+\hline
+TanStack Query & 5.45.1 & Server state management and caching \\
+\hline
+Axios & 1.7.2 & HTTP client with request interceptors \\
+\hline
+jsonwebtoken & 9.0.2 & JWT creation and verification \\
+\hline
+bcryptjs & 2.4.3 & Password hashing (salt factor 12) \\
+\hline
+Cloudinary SDK & 1.41.3 & Image upload and CDN management \\
+\hline
+multer-storage-cloudinary & 4.0.0 & Multipart form image upload \\
+\hline
+winston & 3.13.0 & Structured application logging \\
+\hline
+recharts & 2.12.7 & React chart components \\
+\hline
+react-hot-toast & 2.4.1 & In-app toast notifications \\
+\hline
+nodemon & 3.1.4 & Development auto-restart \\
+\hline
+Visual Studio Code & 1.90+ & Primary IDE \\
+\hline
+Postman & Latest & API testing and documentation \\
+\hline
+MongoDB Compass & Latest & Database inspection GUI \\
+\hline
+ngrok & 3.36.1 & Webhook tunnelling for local development \\
+\hline
+\end{tabularx}
+\end{table}
+
+% ─── Appendix B — Additional Material ───────────────────────────────────────
+\chapter{Appendix B: Additional Material}
+
+
+\section{Environment Configuration}
+
+\begin{lstlisting}[caption=.env Configuration Reference (Sensitive values redacted)]
+# Server
+PORT=5000
+NODE_ENV=development
+
+# MongoDB
+MONGODB_URI=mongodb://localhost:27017/chatserve
+
+# JWT
+JWT_ACCESS_SECRET=<32+ char random string>
+JWT_REFRESH_SECRET=<32+ char random string>
+JWT_ACCESS_EXPIRES=15m
+JWT_REFRESH_EXPIRES=7d
+
+# Cloudinary
+CLOUDINARY_CLOUD_NAME=<cloud-name>
+CLOUDINARY_API_KEY=<api-key>
+CLOUDINARY_API_SECRET=<api-secret>
+
+# Meta / WhatsApp Cloud API
+META_APP_ID=<meta-app-id>
+META_APP_SECRET=<meta-app-secret>
+META_WEBHOOK_VERIFY_TOKEN=<random-string>
+META_GRAPH_API_VERSION=v19.0
+
+# Platform Bot Number (Test Number)
+MAIN_PHONE_NUMBER_ID=<phone-number-id>
+MAIN_WABA_ID=<waba-id>
+MAIN_ACCESS_TOKEN=<temporary-or-permanent-token>
+
+# Embedded Signup
+META_CONFIG_ID=<embedded-signup-config-id>
+EMBEDDED_SIGNUP_REDIRECT_URI=https://yourdomain/api/embedded-signup/callback
+
+# Application URLs
+FRONTEND_URL=http://localhost:3000
+WEBHOOK_BASE_URL=https://yourngrok.ngrok-free.app
+\end{lstlisting}
+
+% ─── References ──────────────────────────────────────────────────────────────
+\newpage
+\begin{thebibliography}{99}
+
+\bibitem{meta_cloud_api}
+Meta Platforms Inc.,
+``WhatsApp Cloud API Documentation,''
+[Online]. Available: \url{https://developers.facebook.com/docs/whatsapp/cloud-api}
+
+\bibitem{meta_webhooks}
+Meta Platforms Inc.,
+``WhatsApp Webhooks Documentation,''
+[Online]. Available: \url{https://developers.facebook.com/docs/whatsapp/cloud-api/webhooks}
+
+\bibitem{meta_messages_api}
+Meta Platforms Inc.,
+``Sending Messages using WhatsApp Cloud API,''
+[Online]. Available: \url{https://developers.facebook.com/docs/whatsapp/cloud-api/reference/messages}
+
+\bibitem{meta_business_profile}
+Meta Platforms Inc.,
+``WhatsApp Business Profile API,''
+[Online]. Available: \url{https://developers.facebook.com/docs/whatsapp/cloud-api/reference/whatsapp-business-profile}
+
+\bibitem{meta_embedded_signup}
+Meta Platforms Inc.,
+``Embedded Signup for WhatsApp Business Platform,''
+[Online]. Available: \url{https://developers.facebook.com/docs/whatsapp/embedded-signup}
+
+\bibitem{meta_templates}
+Meta Platforms Inc.,
+``Message Templates (WhatsApp Business API),''
+[Online]. Available: \url{https://developers.facebook.com/docs/whatsapp/message-templates}
+
+\bibitem{meta_pricing}
+Meta Platforms Inc.,
+``WhatsApp Business Platform Pricing,''
+[Online]. Available: \url{https://developers.facebook.com/docs/whatsapp/pricing}
+
+\bibitem{meta_business_management}
+Meta Platforms Inc.,
+``WhatsApp Business Management API,''
+[Online]. Available: \url{https://developers.facebook.com/docs/whatsapp/business-management-api}
+
+\bibitem{meta_whatsapp}
+Meta Platforms Inc., 
+``WhatsApp Business Platform Overview,'' 
+2024. [Online]. Available: \url{https://developers.facebook.com/docs/whatsapp}
+
+\bibitem{msme_annual_report}
+Ministry of Micro, Small and Medium Enterprises, Government of India, 
+``Annual Report 2022--23,'' 
+New Delhi, 2023. [Online]. Available: \url{https://dashboard.msme.gov.in/}
+
+\bibitem{pib_msme2025}
+Press Information Bureau. ``MSME sector accounts for 30.1\% of India's GDP, 35.4\% of manufacturing and 45.73\% of exports in the country: Union Minister for MSME.'' \textit{Ministry of Micro, Small \& Medium Enterprises}, July 4, 2025.
+
+\bibitem{chegg_homebusiness2025}
+Sharma, Anshika. ``50 Best Home Based Business Ideas for 2025 : Start Now.'' \textit{Chegg}, July 24, 2025.
+
+\bibitem{infobip_stats2026}
+Posavac, Sandra. ``WhatsApp statistics 2026: Market analysis \& global usage data.'' \textit{Infobip}, April 20, 2026.
+
+\bibitem{hyperleap_india2026}
+Lakkepuram, Gopi Krishna. ``WhatsApp Business Statistics India 2026.'' \textit{Hyperleap AI}, October 8, 2025.
+
+\bibitem{thunderbit_stats2025}
+Guan, Shuai. ``110 WhatsApp Statistics and Facts.'' \textit{Thunderbit}, December 30, 2025.
+
+\bibitem{setter_stats2025}
+Tzschetzsch, Timo. ``WhatsApp Business Statistics: 25 Stats You Can't Ignore [2025].'' \textit{Setter AI}, November 27, 2025.
+
+\bibitem{d7_stats2026}
+Kurian, Saumya. ``60 WhatsApp Business Statistics You Need to Know in 2026.'' \textit{D7 Networks}, November 11, 2024.
+
+\bibitem{whatsapp_difference}
+WhatsApp. ``The Difference Between WhatsApp and WhatsApp for Business.'' \textit{WhatsApp Official Website}.
+
+
+\end{thebibliography}
+
+
+
+% ══════════════════════════════════════════════════════════════════════════════
+\end{document}
+% ══════════════════════════════════════════════════════════════════════════════

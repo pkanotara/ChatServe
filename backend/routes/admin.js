@@ -76,7 +76,7 @@ router.get('/restaurants/:id', async (req, res, next) => {
 router.patch('/restaurants/:id/status', async (req, res, next) => {
   try {
     const { status } = req.body;
-    const allowed = ['active', 'inactive', 'suspended'];
+    const allowed = ['active', 'inactive'];
     if (!allowed.includes(status)) return res.status(400).json({ error: 'Invalid status' });
 
     const restaurant = await Restaurant.findByIdAndUpdate(

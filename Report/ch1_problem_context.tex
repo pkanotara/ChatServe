@@ -1,0 +1,92 @@
+% ══════════════════════════════════════════════════════════════════════════════
+% CHAPTER 1 — PROBLEM CONTEXT AND MOTIVATION
+% ══════════════════════════════════════════════════════════════════════════════
+
+\chapter{Problem Context and Motivation}
+
+\section{Background of MSME and Informal Sector}
+
+India is home to the largest MSME community in the world and that has been very integral in fueling the economy. In the order of 6.5 crore (65 million) MSMEs are present at the moment over the country and they also put out almost 30.1\% of our national GDP, 35.4\% of the manufacturing output and 45.73\% of what we export. Also we have near 28 crore people employed in this area, which is a large part of the work force \cite{pib_msme2025}. In that large sphere small businesses and service providers are a big segment. We have home-based businesses, local shops, salons, freelancers, cloud kitchens we have them all. These are very much a part of urban and semi urban life, and a lot of people depend on them daily.
+
+The owners lack the technical skill, also they do not have time to spare, and they would rather not pay for the expensive digital tools.
+
+Now in India WhatsApp is very popular. We see a user base of over 500 million which is reported in \cite{hyperleap_india2026}. It has in fact become the primary communication platform for large sections of small businesses. Owners use it for taking orders, sharing product or service catalogs, replying to questions and in general staying in touch with customers. But the standard WhatsApp Business App is a little out of date. While it does basic messaging very well it does not have in it the automated features which a proper order and booking management system would require.
+
+% ─────────────────────────────────────────────────────────────────────────────
+
+\section{Real-World Observations}
+
+In a look at how small businesses run their day to day ops WhatsApp is what they use the most. The owner goes through each message, looks at availability, does the math and either notes it in a notebook or does it in her head. That is the main routine for most. When it is busy during peak hours for example -- that break down. At the same time multiple customers are messaging in at which point the owner just can't keep up. Orders go out the window, responses are delayed, and details are left out. WhatsApp is for chat not business which is why it does not have in it any order tracking, auto response, or structuring of workflow.
+
+Many of these business owners do not have low-cost tools that could help them manage their businesses. The available tools either require too much technical knowledge for the owner to understand how to use them or involve such high recurring subscription costs that they are not feasible for small businesses that are often tight on cash and can't afford to pay for them.
+
+All of this indicates that there is clearly a demand for a solution that is straightforward and easy to use, allows users to seamlessly integrate into WhatsApp, and can automate the repetitive steps of collecting orders and bookings so that these businesses can spend time on the other important tasks in their business. Enhancing productivity and improving the customer experience through streamlining the ordering and booking process will have a significant impact on the way they work with their customers.
+
+% ─────────────────────────────────────────────────────────────────────────────
+
+\section{Problem Statement}
+
+In India, the small business sector relies heavily on WhatsApp to communicate and manage their order processes and communications with customers; however, small businesses don't have affordable, easy-to-utilize tools capable of automating any part of this very important set of tasks. The tools available today are all very much at two different ends of the spectrum: on one side is the no-cost WhatsApp Business App which only allows for basic messaging (with no ability to provide additional functionality to help engage customers); on the other side is an API-based platform that provides many advanced features including automated responses and analytics to help engage customers, but these solutions are often too expensive to implement and require extensive technical expertise for implementation and ongoing support.
+
+Limited availability in their capacity to easily access tools creates a scenario whereby the majority of micro/small businesses find themselves reliant on manual processes to complete their operations. Consequently, many micro/small businesses suffer from operational challenges associated with the reliance on manual processes, such as missed orders, slow response times to customer inquiries, and a lack of visibility into the one's overall performance and operational efficiency level. The result is a significant gap in the market as these small businesses have no way to compete effectively in an increasingly fast-paced digital world due to the lack of reasonably priced user-friendly solutions that specifically address their unique needs.
+
+The core question we're trying to answer is: \textit{How can a small business owner access automated WhatsApp-based order and booking management without technical knowledge, without significant cost, and without complex setup requirements?}
+
+\begin{table}[htbp]
+    \centering
+    \small
+    \begin{tabular}{|p{3.5cm}|c|c|p{3cm}|}
+        \hline
+        \textbf{Business Size} & 
+        \textbf{\shortstack{WhatsApp \\ Business App}} & 
+        \textbf{\shortstack{WhatsApp \\ Business API}} & 
+        \textbf{Reason} \\
+        \hline
+        \shortstack[l]{Micro \\ (1--5 emp.)} & 92\% & 2\% & Cost, simple \\
+        \hline
+        \shortstack[l]{Small \\ (6--25 emp.)} & 75\% & 15\% & Basic automation \\
+        \hline
+        \shortstack[l]{Medium \\ (26--200 emp.)} & 40\% & 55\% & Multi-user, integration \\
+        \hline
+        \shortstack[l]{Large \\ (200+ emp.)} & 10\% & 85\% & Scale, CRM sync \\
+        \hline
+    \end{tabular}
+
+    \vspace{0.2cm}
+    \caption{WhatsApp Business Adoption by Enterprise Size in India \cite{hyperleap_india2026}}
+    \label{tab:adoption_by_size}
+\end{table}
+
+% ─────────────────────────────────────────────────────────────────────────────
+
+\section{Objectives of the Study}
+
+What we have put forth with this project is very simple -- we are to develop a system which enables small business owners to use WhatsApp for their order and booking management which in turn they do not have to get into the technical aspects of. As for the main goals they are:.
+
+\begin{enumerate}
+
+    \item To create a conversational onboarding experience which is technical knowledge free for business owners. 
+    \item To put in place an automated order and booking handling via a WhatsApp based chatbot. \item To present a very simple and intuitive interface for managing product/service catalogs and orders. 
+    \item To put forward a scalable system architecture for many businesses (multi-tenant SaaS model). 
+    \item To keep the overall system affordable and simple enough that small businesses can actually get it running without much hassle.
+
+\end{enumerate}.
+
+
+% ─────────────────────────────────────────────────────────────────────────────
+
+\section{Scope of the Project}
+
+This project which has put forth a WhatsApp based automation system for small businesses. We do chatbot which takes care of order and booking processing, a business owner's on boarding guide and also a web dashboard for day to day management. Although we have designed the system with the Indian MSME sector in mind, the base structure of the system is flexible enough to be used by various types of small scale businesses including home-based ventures, salons, local shops, and freelancers. To that effect we have excluded a few elements from the present scope:.
+
+\begin{itemize}
+
+\item Integration with external payment gateways
+
+\item Multi-language chatbot support
+
+\item Delivery partner integration
+
+\item Advanced analytics and reporting features
+
+\end{itemize}

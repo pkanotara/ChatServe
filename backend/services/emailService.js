@@ -51,7 +51,6 @@ const sendPasswordResetEmail = async ({ ownerName, ownerEmail, restaurantName, n
     ownerName,
     ownerEmail,
     restaurantName,
-    newPassword,
     adminName,
     dashboardUrl,
     resetTime,

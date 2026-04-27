@@ -1,7 +1,8 @@
 const { sendBtn } = require("../utils/messenger");
 
+
 const showMainMenu = async (ctx) => {
-  const { customer } = ctx;
+  const { customer, restaurant } = ctx;
 
   customer.botSession.step = "main_menu";
   await customer.save();
@@ -10,11 +11,20 @@ const showMainMenu = async (ctx) => {
   const cartCount = customer.botSession?.cart?.length || 0;
   const cartLabel = cartCount > 0 ? `🛒 Cart (${cartCount})` : "🛒 View Cart";
 
-  await sendBtn(ctx, `What are you craving today${name}? 😋`, [
-    { id: "order_food", title: "🍕 Order Food" },
-    { id: "view_cart", title: cartLabel },
-    { id: "track_order", title: "📦 Track Order" },
-  ]);
+  await sendBtn(
+    ctx,
+    `🍽️ Welcome to *${restaurant.name}*${name}! 👋
+
+What are you craving today? 😋  
+We’ve got something delicious waiting for you...
+
+Tap an option below to continue 👇`,
+    [
+      { id: "order_food", title: "🍕 Browse Menu" },
+      { id: "view_cart", title: cartLabel },
+      { id: "track_order", title: "📦 Track My Order" },
+    ]
+  );
 };
 
 const handleMainMenuReply = async (ctx) => {

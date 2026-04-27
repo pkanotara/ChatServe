@@ -9,7 +9,6 @@ import AdminLayout from './layouts/AdminLayout'
 import AdminDashboard from './pages/admin/Dashboard'
 import AdminRestaurants from './pages/admin/Restaurants'
 import AdminRestaurantDetail from './pages/admin/RestaurantDetail'
-import AdminOrders from './pages/admin/Orders'
 import AdminBroadcast from './pages/admin/Broadcast'
 import AdminOnboarding from './pages/admin/Onboarding'
 
@@ -20,6 +19,7 @@ import RestaurantMenu from './pages/restaurant/Menu'
 import RestaurantOrders from './pages/restaurant/Orders'
 import RestaurantProfile from './pages/restaurant/Profile'
 import RestaurantWhatsApp from './pages/restaurant/WhatsApp'
+import RestaurantBroadcast from './pages/restaurant/Broadcast'
 import RestaurantCustomers from './pages/restaurant/Customers'
 
 // Onboarding public pages
@@ -59,7 +59,6 @@ export default function App() {
             <Route index element={<AdminDashboard />} />
             <Route path="restaurants" element={<AdminRestaurants />} />
             <Route path="restaurants/:id" element={<AdminRestaurantDetail />} />
-            <Route path="orders" element={<AdminOrders />} />
             <Route path="broadcast" element={<AdminBroadcast />} />
             <Route path="onboarding" element={<AdminOnboarding />} />
           </Route>
@@ -76,6 +75,7 @@ export default function App() {
             <Route path="profile" element={<RestaurantProfile />} />
             <Route path="whatsapp" element={<RestaurantWhatsApp />} />
             <Route path="customers" element={<RestaurantCustomers />} />
+            <Route path="broadcast" element={<RestaurantBroadcast />} />
           </Route>
 
           {/* Default redirect */}

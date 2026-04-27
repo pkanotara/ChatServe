@@ -76,13 +76,17 @@ router.get('/stats', async (req, res, next) => {
     today.setHours(0, 0, 0, 0);
     const thisMonth = new Date(today.getFullYear(), today.getMonth(), 1);
 
-    const [totalOrders, todayOrders, pendingOrders, totalCustomers, monthRevenue, topItems] = await Promise.all([
+    const [totalOrders, todayOrders, pendingOrders, totalCustomers, monthRevenue, allTimeRevenue, topItems] = await Promise.all([
       Order.countDocuments({ restaurant: restaurantId }),
       Order.countDocuments({ restaurant: restaurantId, createdAt: { $gte: today } }),
       Order.countDocuments({ restaurant: restaurantId, status: 'pending' }),
       Customer.countDocuments({ restaurant: restaurantId }),
       Order.aggregate([
-        { $match: { restaurant: restaurantId, createdAt: { $gte: thisMonth }, paymentStatus: 'paid' } },
+        { $match: { restaurant: restaurantId, createdAt: { $gte: thisMonth }, $or: [{ paymentStatus: 'paid' }, { status: 'delivered' }] } },
+        { $group: { _id: null, total: { $sum: '$total' } } },
+      ]),
+      Order.aggregate([
+        { $match: { restaurant: restaurantId, $or: [{ paymentStatus: 'paid' }, { status: 'delivered' }] } },
         { $group: { _id: null, total: { $sum: '$total' } } },
       ]),
       Order.aggregate([
@@ -97,7 +101,7 @@ router.get('/stats', async (req, res, next) => {
     res.json({
       totalOrders, todayOrders, pendingOrders, totalCustomers,
       monthRevenue: monthRevenue[0]?.total || 0,
-      totalRevenue: restaurant.totalRevenue,
+      totalRevenue: allTimeRevenue[0]?.total || 0,
       topItems: topItems.map(i => ({ name: i._id, count: i.count })),
     });
   } catch (err) { next(err); }
@@ -218,6 +222,71 @@ router.post('/sync-whatsapp-profile', async (req, res, next) => {
         category: 'RESTAURANT',
       },
       errors: results.errors || [],
+    });
+  } catch (err) { next(err); }
+});
+
+// ─── Owner Broadcast ────────────────────────────────────────────────────────
+router.post('/broadcast', async (req, res, next) => {
+  try {
+    const { customerIds, message } = req.body;
+    if (!message?.trim()) return res.status(400).json({ error: 'Message is required' });
+    if (!Array.isArray(customerIds) || customerIds.length === 0) {
+      return res.status(400).json({ error: 'Select at least one customer' });
+    }
+
+    const restaurant = await getOwnedRestaurant(req.user.id);
+    if (!restaurant) return res.status(404).json({ error: 'Restaurant not found' });
+
+    const waConfig = await WhatsAppConfig.findOne({ restaurant: restaurant._id }).select('+accessToken');
+    if (!waConfig?.phoneNumberId || waConfig.phoneNumberId === 'PENDING') {
+      return res.status(400).json({ error: 'WhatsApp not configured. Complete setup first.' });
+    }
+
+    const customers = await Customer.find({
+      _id: { $in: customerIds },
+      restaurant: restaurant._id,
+    }).select('whatsappNumber');
+
+    const { sendTextMessage } = require('../services/whatsappService');
+    const token = waConfig.accessToken || process.env.MAIN_ACCESS_TOKEN;
+    const broadcastMsg = `📢 *${restaurant.name}*\n\n${message.trim()}`;
+
+    let sent = 0, failed = 0;
+    for (const customer of customers) {
+      try {
+        await sendTextMessage(waConfig.phoneNumberId, token, customer.whatsappNumber, broadcastMsg);
+        sent++;
+      } catch { failed++; }
+    }
+
+    res.json({ sent, failed, total: customers.length });
+  } catch (err) { next(err); }
+});
+
+// ─── Manual WhatsApp Activation (Owner) ─────────────────────────────────────
+router.post('/whatsapp/manual-activate', async (req, res, next) => {
+  try {
+    const { wabaId, phoneNumberId, accessToken } = req.body;
+    if (!wabaId || !phoneNumberId) {
+      return res.status(400).json({ error: 'wabaId and phoneNumberId are required' });
+    }
+    const restaurant = await getOwnedRestaurant(req.user.id);
+    if (!restaurant) return res.status(404).json({ error: 'Restaurant not found' });
+
+    const { manualActivation } = require('../services/embeddedSignupService');
+    const waConfig = await manualActivation(restaurant._id.toString(), {
+      wabaId,
+      phoneNumberId,
+      accessToken: accessToken || process.env.MAIN_ACCESS_TOKEN,
+      signupMode: 'cloud_api',
+    });
+
+    res.json({
+      message: 'WhatsApp activated successfully!',
+      wabaId: waConfig.wabaId,
+      phoneNumberId: waConfig.phoneNumberId,
+      botEnabled: waConfig.botEnabled,
     });
   } catch (err) { next(err); }
 });

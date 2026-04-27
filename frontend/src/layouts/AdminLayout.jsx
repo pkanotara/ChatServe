@@ -1,14 +1,13 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import {
-  LayoutDashboard, Store, ShoppingBag, Megaphone,
+  LayoutDashboard, Store, Megaphone,
   UserCheck, LogOut, ChefHat, Bell
 } from 'lucide-react'
 
 const navItems = [
   { to: '/admin', icon: LayoutDashboard, label: 'Dashboard', end: true },
   { to: '/admin/restaurants', icon: Store, label: 'Restaurants' },
-  { to: '/admin/orders', icon: ShoppingBag, label: 'All Orders' },
   { to: '/admin/onboarding', icon: UserCheck, label: 'Onboarding' },
   { to: '/admin/broadcast', icon: Megaphone, label: 'Broadcast' },
 ]

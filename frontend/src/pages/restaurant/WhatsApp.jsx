@@ -5,7 +5,7 @@ import { useAuth } from '../../context/AuthContext'
 import axios from 'axios'
 import {
   CheckCircle2, Clock, AlertCircle, ExternalLink,
-  Wifi, ToggleLeft, ToggleRight, Loader2, RefreshCw
+  Wifi, ToggleLeft, ToggleRight, Loader2, Wrench
 } from 'lucide-react'
 import toast from 'react-hot-toast'
 
@@ -15,6 +15,8 @@ export default function RestaurantWhatsApp() {
   const { user } = useAuth()
   const qc = useQueryClient()
   const restaurantId = user?.restaurantId
+  const [showManual, setShowManual] = useState(false)
+  const [manualForm, setManualForm] = useState({ wabaId: '', phoneNumberId: '', accessToken: '' })
 
   const { data: wa, isLoading } = useQuery({
     queryKey: ['restaurant-whatsapp'],
@@ -25,7 +27,7 @@ export default function RestaurantWhatsApp() {
     },
   })
 
-  const { data: linkData, isLoading: linkLoading } = useQuery({
+  const { data: linkData } = useQuery({
     queryKey: ['signup-link', restaurantId],
     queryFn: () => publicApi.get(`/embedded-signup/link/${restaurantId}`).then(r => r.data),
     enabled: !!restaurantId && wa?.signupStatus !== 'configured',
@@ -39,6 +41,16 @@ export default function RestaurantWhatsApp() {
       toast.success(res.data.botEnabled ? 'Bot enabled ✅' : 'Bot paused ⏸️')
     },
     onError: () => toast.error('Failed to toggle bot'),
+  })
+
+  const manualActivate = useMutation({
+    mutationFn: () => api.post('/restaurant/whatsapp/manual-activate', manualForm),
+    onSuccess: (res) => {
+      qc.invalidateQueries(['restaurant-whatsapp'])
+      toast.success(res.data.message)
+      setShowManual(false)
+    },
+    onError: (err) => toast.error(err.response?.data?.error || 'Activation failed'),
   })
 
   if (isLoading) return (
@@ -83,7 +95,7 @@ export default function RestaurantWhatsApp() {
               <h3 className="font-semibold text-amber-900">Setup Partially Complete</h3>
               <p className="text-sm text-amber-700 mt-1">
                 Meta signup completed but WABA configuration is pending.
-                Please contact the platform admin to complete manual activation.
+                You can complete it manually below.
               </p>
             </div>
           </div>
@@ -113,36 +125,20 @@ export default function RestaurantWhatsApp() {
 
         <Row label="Target Business Number" value={wa?.targetBusinessNumber} />
         <Row label="Signup Status" value={wa?.signupStatus?.replace(/_/g, ' ')} />
-        <Row
-          label="WABA ID"
-          value={wa?.wabaId}
-          mono
-          warn={!wa?.wabaId || wa?.wabaId === 'PENDING'}
-        />
-        <Row
-          label="Phone Number ID"
-          value={wa?.phoneNumberId}
-          mono
-          warn={!wa?.phoneNumberId || wa?.phoneNumberId === 'PENDING'}
-        />
+        <Row label="WABA ID" value={wa?.wabaId} mono warn={!wa?.wabaId || wa?.wabaId === 'PENDING'} />
+        <Row label="Phone Number ID" value={wa?.phoneNumberId} mono warn={!wa?.phoneNumberId || wa?.phoneNumberId === 'PENDING'} />
         <Row label="Configured At" value={wa?.configuredAt ? new Date(wa.configuredAt).toLocaleString() : '—'} />
 
-        {/* Bot Toggle — only show when fully configured */}
         {isFullyConfigured && (
           <div className="pt-4 border-t border-zinc-100">
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium text-zinc-900 text-sm">Bot Status</p>
                 <p className="text-xs text-zinc-500 mt-0.5">
-                  {wa.botEnabled
-                    ? 'Your chatbot is live and accepting orders'
-                    : 'Bot is paused — customers cannot order'}
+                  {wa.botEnabled ? 'Your chatbot is live and accepting orders' : 'Bot is paused — customers cannot order'}
                 </p>
               </div>
-              <button
-                onClick={() => toggleBot.mutate(!wa.botEnabled)}
-                disabled={toggleBot.isPending}
-              >
+              <button onClick={() => toggleBot.mutate(!wa.botEnabled)} disabled={toggleBot.isPending}>
                 {toggleBot.isPending
                   ? <Loader2 size={22} className="animate-spin text-zinc-400" />
                   : wa.botEnabled
@@ -162,40 +158,20 @@ export default function RestaurantWhatsApp() {
 
           <div className="space-y-5 mb-6">
             {[
-              {
-                done: true,
-                title: 'Restaurant details collected',
-                desc: 'Your business info has been saved'
-              },
-              {
-                done: !!wa?.targetBusinessNumber,
-                title: 'Target number selected',
-                desc: wa?.targetBusinessNumber || 'Not set'
-              },
-              {
-                done: wa?.signupStatus === 'signup_completed' || isConfigured,
-                title: 'Meta Embedded Signup',
-                desc: 'Log into Facebook and verify your WhatsApp number'
-              },
-              {
-                done: isFullyConfigured,
-                title: 'WABA & Phone Number configured',
-                desc: hasPendingIds ? 'Pending admin activation' : 'Automatic after signup'
-              },
+              { done: true, title: 'Restaurant details collected', desc: 'Your business info has been saved' },
+              { done: !!wa?.targetBusinessNumber, title: 'Target number selected', desc: wa?.targetBusinessNumber || 'Not set' },
+              { done: wa?.signupStatus === 'signup_completed' || isConfigured, title: 'Meta Embedded Signup', desc: 'Log into Facebook and verify your WhatsApp number' },
+              { done: isFullyConfigured, title: 'WABA & Phone Number configured', desc: hasPendingIds ? 'Pending — use manual setup below' : 'Automatic after signup' },
             ].map((step, i) => (
               <div key={i} className="flex gap-4">
-                <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
-                  step.done ? 'bg-green-500' : 'bg-zinc-200'
-                }`}>
+                <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${step.done ? 'bg-green-500' : 'bg-zinc-200'}`}>
                   {step.done
                     ? <CheckCircle2 size={14} className="text-white" />
                     : <span className="text-zinc-500 text-xs font-bold">{i + 1}</span>
                   }
                 </div>
                 <div>
-                  <p className={`text-sm font-medium ${step.done ? 'text-green-700 line-through' : 'text-zinc-900'}`}>
-                    {step.title}
-                  </p>
+                  <p className={`text-sm font-medium ${step.done ? 'text-green-700 line-through' : 'text-zinc-900'}`}>{step.title}</p>
                   <p className="text-xs text-zinc-500 mt-0.5">{step.desc}</p>
                 </div>
               </div>
@@ -215,25 +191,64 @@ export default function RestaurantWhatsApp() {
               </a>
               <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                 <p className="text-xs text-blue-700">
-                  ℹ️ You must complete this step yourself. Meta requires the business owner to
-                  authenticate via Facebook and verify the phone number. After that, everything is automatic.
+                  ℹ️ Meta requires the business owner to authenticate via Facebook and verify the phone number. After that, everything is automatic.
                 </p>
               </div>
             </>
-          ) : hasPendingIds ? (
-            <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
-              <p className="text-sm font-medium text-amber-800 mb-1">Contact Platform Admin</p>
-              <p className="text-xs text-amber-700">
-                Your Meta signup completed but the WABA ID configuration requires admin activation.
-                Please contact the platform administrator to complete the setup.
-              </p>
-            </div>
-          ) : (
+          ) : !hasPendingIds ? (
             <div className="flex items-center gap-2 text-zinc-500 text-sm">
               <Loader2 size={15} className="animate-spin" />
               Loading setup link...
             </div>
-          )}
+          ) : null}
+        </div>
+      )}
+
+      {/* Configure Manually Button */}
+      <button
+        onClick={() => setShowManual(true)}
+        className="flex items-center gap-2 px-4 py-2.5 border border-zinc-300 hover:border-orange-400 hover:text-orange-600 text-zinc-700 font-medium text-sm rounded-lg transition-colors"
+      >
+        <Wrench size={15} />
+        Configure WhatsApp Manually
+      </button>
+
+      {/* Manual Configure Modal */}
+      {showManual && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
+          <div className="absolute inset-0 bg-black/40" onClick={() => setShowManual(false)} />
+          <div className="relative bg-white w-full sm:max-w-md rounded-t-2xl sm:rounded-2xl shadow-xl p-6 space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Wrench size={16} className="text-orange-500" />
+                <h3 className="font-semibold text-zinc-900">Configure WhatsApp Manually</h3>
+              </div>
+              <button onClick={() => setShowManual(false)} className="text-zinc-400 hover:text-zinc-600 text-xl leading-none">&times;</button>
+            </div>
+            <p className="text-xs text-zinc-500">Enter your credentials from Meta Developer Console → WhatsApp → API Setup</p>
+            <div>
+              <label className="label">WABA ID *</label>
+              <input className="input font-mono" placeholder="e.g. 2448725995583940"
+                value={manualForm.wabaId} onChange={e => setManualForm(f => ({ ...f, wabaId: e.target.value }))} />
+            </div>
+            <div>
+              <label className="label">Phone Number ID *</label>
+              <input className="input font-mono" placeholder="e.g. 937829752755417"
+                value={manualForm.phoneNumberId} onChange={e => setManualForm(f => ({ ...f, phoneNumberId: e.target.value }))} />
+            </div>
+            <div>
+              <label className="label">Access Token (optional — uses platform token if empty)</label>
+              <input className="input font-mono text-xs" placeholder="EAAxxxxxxx..."
+                value={manualForm.accessToken} onChange={e => setManualForm(f => ({ ...f, accessToken: e.target.value }))} />
+            </div>
+            <button
+              onClick={() => manualActivate.mutate()}
+              disabled={!manualForm.wabaId || !manualForm.phoneNumberId || manualActivate.isPending}
+              className="btn-primary w-full justify-center">
+              {manualActivate.isPending ? <Loader2 size={14} className="animate-spin" /> : <Wrench size={14} />}
+              {manualActivate.isPending ? 'Activating...' : 'Activate WhatsApp'}
+            </button>
+          </div>
         </div>
       )}
     </div>

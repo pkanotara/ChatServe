@@ -1,0 +1,69 @@
+% ══════════════════════════════════════════════════════════════════════════════
+% CHAPTER 5 — CONCLUSION AND FUTURE SCOPE
+% ══════════════════════════════════════════════════════════════════════════════
+\chapter{Conclusion and Future Scope}
+
+\section{Conclusion}
+
+To summarise, the core question of this project was whether a small business owner could access automated ordering and booking in WhatsApp Business without any prior technical knowledge or investment in cost, complexity, or dependency upon an external operator. The result provided through ChatServe is affirmative.
+
+The major components provided include: full conversational onboarding entirely over WhatsApp, automated setup of the WABA instance using Embedded Signup, full-fledged ordering chatbot with its cart and checkout functionalities, and web-based manager's control panel --- all integrated seamlessly within the single-tenant software-as-a-service architecture to serve multiple businesses simultaneously.
+
+The main technical contributions of this work include: production-grade multi-tenant implementation of WhatsApp SAAS functionality, complete implementation of Embedded Signup and OAuth integration with automatic post-configuration, state-machine driven dual-bot architecture, and automatic synchronization of WhatsApp Business profile from platform data. All of these components require significant effort alone, and integrating them into a coherent framework is the primary accomplishment of the work.
+
+Finally, in terms of academic contribution, the work presents insights into the use of WhatsApp Business API as an end-to-end automation channel in developing economies --- an important commercial problem area that remains understudied in the academic community.
+
+\section{Limitations}
+
+Despite the successful implementation of the system, certain limitations apply due to external factors beyond the scope of development. These limitations can be grouped as follows:
+
+\subsection{Platform and Regulatory Limitations}
+
+\begin{itemize}
+    \item Full production deployment of the Meta Embedded Signup flow requires completion of Meta Business Verification.
+    \item This step is necessary to utilise production-ready WhatsApp Business API capabilities.
+    \item It represents a regulatory limitation rather than any constraint related to architecture or implementation.
+    \item The verification process usually includes registration of business account (e.g., Udyam MSME registration) and subsequent approval from Meta, which takes a few days.
+    \item In the meantime, the system uses Manual Activation capability available through admin interface to ensure proper functioning.
+\end{itemize}
+
+\subsection{Infrastructure and Development Constraints}
+
+\begin{itemize}
+    \item Currently the system employs free tier cloud services, which come with some limitations:
+    \begin{itemize}
+        \item MongoDB Atlas comes with data and performance restrictions on free tier.
+        \item Free tier Cloudinary imposes some storage limits.
+        \item WhatsApp Business API allows only limited number of conversations per month for free.
+        \item Development access tokens used temporarily expire over time, requiring periodic renewal.
+    \end{itemize}
+    \item None of these limitations are fundamental and can be addressed by upgrading to paid tiers.
+    \item No other limitations of architectural type were encountered during development.
+\end{itemize}
+
+\section{Future Enhancements}
+
+\subsection{Near-Future Enhancements (3--6 months)}
+
+\begin{itemize}
+    \item Implementation of Razorpay integration allowing UPI/credit/debit card payments
+    \item Business verification and full production deployment of Embedded Signup
+    \item Implementation of template message system to send WhatsApp messages outside 24-hour session window
+\end{itemize}
+
+\subsection{Medium-Term Enhancements (6--12 months)}
+
+\begin{itemize}
+    \item Support for several languages, e.g. Hindi, Gujarati, with automatic language detection
+    \item Customer loyalty system, i.e., points collection and distribution of discount coupons
+    \item Integration with WhatsApp catalogues to browse products and services
+    \item NLP-based order processing, e.g. ``show me services under Rs.\ 500''
+    \item Multi-platform messaging capabilities, e.g. via Instagram, Telegram, etc.
+    \item Developing a mobile app for business owners
+\end{itemize}
+
+\subsection{Long-Term Enhancements (>1 year)}
+
+\begin{itemize}
+    \item Extension to additional business verticals such as healthcare providers, tutoring services, and event planners
+\end{itemize}
