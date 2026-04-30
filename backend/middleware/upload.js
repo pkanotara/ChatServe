@@ -7,7 +7,7 @@ const createStorage = (folder) =>
     cloudinary,
     params: {
       folder: `ChatServe/${folder}`,
-      allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
+      allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'avif', 'gif'],
       transformation: [{ width: 1200, height: 1200, crop: 'limit', quality: 'auto' }],
     },
   });

@@ -63,7 +63,7 @@ export default function RestaurantDashboard() {
           Dashboard
         </h2>
         <p className="text-surface-500 text-sm mt-0.5">
-          Your restaurant at a glance
+          Your business at a glance
         </p>
       </div>
 
@@ -76,7 +76,7 @@ export default function RestaurantDashboard() {
               WhatsApp Business Setup Incomplete
             </p>
             <p className="text-amber-700 text-xs mt-1">
-              Complete the Meta Embedded Signup to activate your ordering
+              Complete the Meta Embedded Signup to activate your
               chatbot.
             </p>
           </div>
@@ -173,7 +173,7 @@ export default function RestaurantDashboard() {
       {stats?.topItems?.length > 0 && (
         <div className="card p-6">
           <h3 className="font-semibold text-surface-900 mb-4">
-            🏆 Top Menu Items
+            🏆 Top Catalog Items
           </h3>
           <div className="space-y-2">
             {stats.topItems.map((item, i) => (

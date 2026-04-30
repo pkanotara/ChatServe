@@ -8,7 +8,7 @@ export function OnboardSuccess() {
         <CheckCircle2 size={64} className="text-green-500 mx-auto mb-6" />
         <h1 className="font-display text-3xl font-bold text-surface-900 mb-3">You're Live! 🎉</h1>
         <p className="text-surface-500 mb-8">
-          Your WhatsApp Business number is now connected. Your restaurant chatbot is active and ready to take orders!
+          Your WhatsApp Business number is now connected. Your chatbot is active and ready to go!
         </p>
         <Link to="/dashboard" className="btn-primary">Go to Dashboard</Link>
       </div>

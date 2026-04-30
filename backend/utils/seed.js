@@ -46,7 +46,8 @@ const seed = async () => {
       address: 'Shop 12, SG Mall, Ahmedabad, Gujarat 380015',
       email: 'demo@spicegarden.com',
       phone: '+91 98765 43210',
-      foodCategories: ['North Indian', 'South Indian', 'Chinese', 'Beverages', 'Desserts'],
+      categories: ['North Indian', 'South Indian', 'Chinese', 'Beverages', 'Desserts'],
+      businessType: 'food',
       status: 'active',
       tenantId: generateTenantId('Spice Garden'),
       workingHours: [

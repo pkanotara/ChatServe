@@ -2,14 +2,14 @@ const express = require('express');
 const router = express.Router();
 const { authenticate, requireOwner, requireAdmin } = require('../middleware/auth');
 const { MenuCategory, MenuItem } = require('../models/Menu');
-const RestaurantOwner = require('../models/RestaurantOwner');
+const BusinessOwner = require('../models/RestaurantOwner');
 const { menuItemUpload } = require('../middleware/upload');
 const cloudinary = require('../config/cloudinary');
 
 // ─── Helper ─────────────────────────────────────────────────────────────────
 const getRestaurantId = async (req) => {
   if (req.user.role === 'super_admin') return req.params.restaurantId || req.query.restaurantId;
-  const owner = await RestaurantOwner.findById(req.user.id);
+  const owner = await BusinessOwner.findById(req.user.id);
   return owner?.restaurant?.toString();
 };
 
@@ -84,19 +84,24 @@ router.get('/items', async (req, res, next) => {
 router.post('/items', menuItemUpload, async (req, res, next) => {
   try {
     const restaurantId = await getRestaurantId(req);
-    const { name, description, price, category, isVeg } = req.body;
+    const { name, description, price, category, isVeg, type, duration, unit } = req.body;
     if (!name || !price || !category) return res.status(400).json({ error: 'name, price, and category required' });
 
-    const item = await MenuItem.create({
+    const itemData = {
       restaurant: restaurantId,
       category,
       name,
       description,
       price: parseFloat(price),
-      isVeg: isVeg === 'true',
       imageUrl: req.file?.path,
       imagePublicId: req.file?.filename,
-    });
+    };
+    if (type) itemData.type = type;
+    if (duration) itemData.duration = parseInt(duration);
+    if (unit) itemData.unit = unit;
+    if (isVeg !== undefined) itemData.isVeg = isVeg === 'true';
+
+    const item = await MenuItem.create(itemData);
     res.status(201).json(item);
   } catch (err) { next(err); }
 });
@@ -107,7 +112,7 @@ router.patch('/items/:id', menuItemUpload, async (req, res, next) => {
     const item = await MenuItem.findOne({ _id: req.params.id, restaurant: restaurantId });
     if (!item) return res.status(404).json({ error: 'Item not found' });
 
-    const { name, description, price, category, isAvailable, isVeg, sortOrder } = req.body;
+    const { name, description, price, category, isAvailable, isVeg, sortOrder, type, duration, unit } = req.body;
     if (name !== undefined) item.name = name;
     if (description !== undefined) item.description = description;
     if (price !== undefined) item.price = parseFloat(price);
@@ -115,6 +120,9 @@ router.patch('/items/:id', menuItemUpload, async (req, res, next) => {
     if (isAvailable !== undefined) item.isAvailable = isAvailable === 'true' || isAvailable === true;
     if (isVeg !== undefined) item.isVeg = isVeg === 'true';
     if (sortOrder !== undefined) item.sortOrder = parseInt(sortOrder);
+    if (type !== undefined) item.type = type;
+    if (duration !== undefined) item.duration = duration ? parseInt(duration) : null;
+    if (unit !== undefined) item.unit = unit || null;
 
     if (req.file) {
       if (item.imagePublicId) await cloudinary.uploader.destroy(item.imagePublicId).catch(() => {});

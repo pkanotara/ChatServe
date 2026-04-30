@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { authenticate, requireAdmin } = require('../middleware/auth');
 const Restaurant = require('../models/Restaurant');
-const RestaurantOwner = require('../models/RestaurantOwner');
+const BusinessOwner = require('../models/RestaurantOwner');
 const WhatsAppConfig = require('../models/WhatsAppConfig');
 const Order = require('../models/Order');
 const { BroadcastLog, ActivityLog } = require('../models/Logs');
@@ -20,7 +20,7 @@ router.get('/stats', async (req, res, next) => {
       Restaurant.countDocuments({ status: 'active' }),
       Restaurant.countDocuments({ status: 'pending_meta' }),
       Order.countDocuments(),
-      RestaurantOwner.countDocuments(),
+      BusinessOwner.countDocuments(),
     ]);
 
     const revenueAgg = await Order.aggregate([
@@ -99,6 +99,33 @@ router.patch('/restaurants/:id/status', async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
+// ─── Delete Restaurant (Cascade) ────────────────────────────────────────────
+// Permanently removes a restaurant AND all its related data:
+//   Owner, Menu Items/Categories, Orders, Customers, WhatsApp Config,
+//   Onboarding Sessions, Broadcast Logs, Activity Logs, Cloudinary images
+router.delete('/restaurants/:id', async (req, res, next) => {
+  try {
+    const restaurant = await Restaurant.findById(req.params.id);
+    if (!restaurant) return res.status(404).json({ error: 'Restaurant not found' });
+
+    const restaurantName = restaurant.name;
+
+    // cascadeDeleteRestaurant handles all related collections + Cloudinary cleanup
+    const { cascadeDeleteRestaurant } = require('../utils/cascadeDelete');
+    const summary = await cascadeDeleteRestaurant(restaurant._id);
+
+    // Delete the restaurant document itself using direct MongoDB driver
+    // to avoid re-triggering the Mongoose cascade middleware
+    const mongoose = require('mongoose');
+    await mongoose.connection.collection('restaurants').deleteOne({ _id: restaurant._id });
+
+    res.json({
+      message: `Restaurant "${restaurantName}" and all related data permanently deleted`,
+      deleted: summary,
+    });
+  } catch (err) { next(err); }
+});
+
 // ─── All Orders (Platform-Wide) ─────────────────────────────────────────────
 router.get('/orders', async (req, res, next) => {
   try {
@@ -121,32 +148,39 @@ router.get('/orders', async (req, res, next) => {
 // ─── Broadcast (Platform-Wide) ──────────────────────────────────────────────
 router.post('/broadcast', async (req, res, next) => {
   try {
-    const { message, restaurantId } = req.body;
-    if (!message) return res.status(400).json({ error: 'Message is required' });
+    const { message, restaurantIds } = req.body;
+    if (!message?.trim()) return res.status(400).json({ error: 'Message is required' });
 
     let ownerQuery = {};
-    if (restaurantId) ownerQuery.restaurant = restaurantId;
+    // Support array of restaurant IDs or legacy single restaurantId
+    if (Array.isArray(restaurantIds) && restaurantIds.length > 0) {
+      ownerQuery.restaurant = { $in: restaurantIds };
+    } else if (req.body.restaurantId) {
+      ownerQuery.restaurant = req.body.restaurantId;
+    }
 
-    const owners = await RestaurantOwner.find(ownerQuery).select('whatsappNumber name');
+    const owners = await BusinessOwner.find(ownerQuery).select('whatsappNumber name');
+    if (owners.length === 0) return res.status(400).json({ error: 'No recipients found' });
+
     const broadcastLog = await BroadcastLog.create({
       sentBy: req.user.id, sentByRole: 'super_admin',
       message, recipients: owners.map(o => o.whatsappNumber),
       status: 'processing',
     });
 
-    let sent = 0;
+    let sent = 0, failed = 0;
     for (const owner of owners) {
       try {
         await sendFromMainBot(owner.whatsappNumber, `📢 *ChatServe Update*\n\n${message}`);
         sent++;
-      } catch { /* continue */ }
+      } catch { failed++; }
     }
 
     await BroadcastLog.findByIdAndUpdate(broadcastLog._id, {
       status: 'completed', totalSent: sent, completedAt: new Date(),
     });
 
-    res.json({ message: `Broadcast sent to ${sent} recipients` });
+    res.json({ sent, failed, total: owners.length });
   } catch (err) { next(err); }
 });
 
@@ -271,7 +305,7 @@ router.post('/restaurants/:ownerId/reset-password', async (req, res, next) => {
       return res.status(400).json({ error: 'Password must be at least 8 characters' });
     }
 
-    const owner = await RestaurantOwner.findById(req.params.ownerId).populate('restaurant', 'name');
+    const owner = await BusinessOwner.findById(req.params.ownerId).populate('restaurant', 'name');
     if (!owner) return res.status(404).json({ error: 'Restaurant owner not found' });
 
     // Invalidate existing sessions by clearing the refresh token

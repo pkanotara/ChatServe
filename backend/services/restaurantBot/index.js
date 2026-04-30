@@ -69,7 +69,8 @@ const handleRestaurantBotMessage = async (
       return checkout.handlePayment(ctx);
 
     case "track_order":
-      return orders.showTrackOrder(ctx);
+    case "track_order_input":
+      return orders.handleTrackOrderInput(ctx);
 
     default:
       return greeting.startGreeting(ctx);

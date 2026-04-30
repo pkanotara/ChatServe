@@ -12,7 +12,7 @@ import AdminRestaurantDetail from './pages/admin/RestaurantDetail'
 import AdminBroadcast from './pages/admin/Broadcast'
 import AdminOnboarding from './pages/admin/Onboarding'
 
-// Restaurant Owner
+// Business Owner
 import RestaurantLayout from './layouts/RestaurantLayout'
 import RestaurantDashboard from './pages/restaurant/Dashboard'
 import RestaurantMenu from './pages/restaurant/Menu'
@@ -63,14 +63,14 @@ export default function App() {
             <Route path="onboarding" element={<AdminOnboarding />} />
           </Route>
 
-          {/* Restaurant Owner */}
+          {/* Business Owner */}
           <Route path="/dashboard" element={
             <ProtectedRoute allowedRoles={['restaurant_owner']}>
               <RestaurantLayout />
             </ProtectedRoute>
           }>
             <Route index element={<RestaurantDashboard />} />
-            <Route path="menu" element={<RestaurantMenu />} />
+            <Route path="catalog" element={<RestaurantMenu />} />
             <Route path="orders" element={<RestaurantOrders />} />
             <Route path="profile" element={<RestaurantProfile />} />
             <Route path="whatsapp" element={<RestaurantWhatsApp />} />

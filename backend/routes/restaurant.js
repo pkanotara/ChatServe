@@ -37,7 +37,7 @@ router.patch('/profile', async (req, res, next) => {
     const restaurant = await getOwnedRestaurant(req.user.id);
     if (!restaurant) return res.status(404).json({ error: 'Restaurant not found' });
 
-    const allowed = ['name', 'description', 'address', 'workingHours', 'foodCategories', 'email', 'phone'];
+    const allowed = ['name', 'description', 'address', 'workingHours', 'categories', 'email', 'phone', 'businessType'];
     allowed.forEach(field => {
       if (req.body[field] !== undefined) restaurant[field] = req.body[field];
     });
@@ -160,8 +160,39 @@ router.get('/customers', async (req, res, next) => {
     const restaurant = await getOwnedRestaurant(req.user.id);
     const customers = await Customer.find({ restaurant: restaurant._id })
       .sort({ totalOrders: -1 })
-      .select('-botSession');
-    res.json(customers);
+      .select('-botSession')
+      .lean();
+
+    // Aggregate real order stats per customer phone number for this restaurant
+    const orderStats = await Order.aggregate([
+      { $match: { restaurant: restaurant._id } },
+      {
+        $group: {
+          _id: '$customerNumber',
+          totalOrders: { $sum: 1 },
+          totalSpent: { $sum: '$total' },
+          lastOrderAt: { $max: '$createdAt' },
+        },
+      },
+    ]);
+    const statsMap = {};
+    orderStats.forEach(s => { statsMap[s._id] = s; });
+
+    // Merge real stats into customer records
+    const enriched = customers.map(c => {
+      const s = statsMap[c.whatsappNumber];
+      if (s) {
+        c.totalOrders = s.totalOrders;
+        c.totalSpent = s.totalSpent;
+        c.lastOrderAt = s.lastOrderAt;
+      }
+      return c;
+    });
+
+    // Re-sort by real totalOrders descending
+    enriched.sort((a, b) => (b.totalOrders || 0) - (a.totalOrders || 0));
+
+    res.json(enriched);
   } catch (err) { next(err); }
 });
 
@@ -219,7 +250,7 @@ router.post('/sync-whatsapp-profile', async (req, res, next) => {
         address: restaurant.address ? 'updated' : 'skipped',
         email: restaurant.email ? 'updated' : 'skipped',
         photo: restaurant.logoUrl ? (results.photo || 'attempted') : 'no logo set',
-        category: 'RESTAURANT',
+        category: restaurant.businessType?.toUpperCase() || 'OTHER',
       },
       errors: results.errors || [],
     });

@@ -1,4 +1,4 @@
-const { sendBtn } = require("../utils/messenger");
+const { sendBtn, sendList } = require("../utils/messenger");
 
 
 const showMainMenu = async (ctx) => {
@@ -11,19 +11,23 @@ const showMainMenu = async (ctx) => {
   const cartCount = customer.botSession?.cart?.length || 0;
   const cartLabel = cartCount > 0 ? `🛒 Cart (${cartCount})` : "🛒 View Cart";
 
-  await sendBtn(
+  await sendList(
     ctx,
-    `🍽️ Welcome to *${restaurant.name}*${name}! 👋
-
-What are you craving today? 😋  
-We’ve got something delicious waiting for you...
-
-Tap an option below to continue 👇`,
+    restaurant.name,
+    `👋 Welcome${name}!\n\nWhat would you like to do today? 😊\nTap the button below to see options 👇`,
+    "Powered by ChatServe",
+    "Menu Options",
     [
-      { id: "order_food", title: "🍕 Browse Menu" },
-      { id: "view_cart", title: cartLabel },
-      { id: "track_order", title: "📦 Track My Order" },
-    ]
+      {
+        title: "Choose an option",
+        rows: [
+          { id: "order_food", title: "📋 Browse Catalog", description: "View our products & services" },
+          { id: "view_cart", title: cartLabel, description: "Review items in your cart" },
+          { id: "track_order", title: "📦 Track My Order", description: "Check your order status" },
+          { id: "help", title: "📞 Help & Contact", description: "Get support from the business" },
+        ],
+      },
+    ],
   );
 };
 

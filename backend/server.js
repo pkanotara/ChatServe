@@ -79,6 +79,12 @@ const PORT = process.env.PORT || 5000;
 async function start() {
   await connectDB();
   await initRedis();
+
+  // Start Change Stream watcher so deletions from MongoDB Compass
+  // (or any external tool) cascade-delete all related restaurant data
+  const { startRestaurantWatcher } = require('./utils/restaurantWatcher');
+  startRestaurantWatcher();
+
   app.listen(PORT, () => {
     logger.info(`ChatServe backend running on port ${PORT} [${process.env.NODE_ENV}]`);
   });

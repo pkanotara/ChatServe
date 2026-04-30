@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import api from '../../services/api'
-import { Plus, Edit2, Trash2, Loader2, UtensilsCrossed, X, Check } from 'lucide-react'
+import { Plus, Edit2, Trash2, Loader2, Package, X, Check } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 export default function RestaurantMenu() {
@@ -11,7 +11,7 @@ export default function RestaurantMenu() {
   const [editItem, setEditItem] = useState(null)
   const [selectedCat, setSelectedCat] = useState(null)
   const [catName, setCatName] = useState('')
-  const [itemForm, setItemForm] = useState({ name:'', description:'', price:'', category:'', isVeg:'false' })
+  const [itemForm, setItemForm] = useState({ name:'', description:'', price:'', category:'', type:'product', duration:'' })
   const [imageFile, setImageFile] = useState(null)
 
   const { data: categories = [], isLoading: catsLoading } = useQuery({
@@ -47,7 +47,7 @@ export default function RestaurantMenu() {
     onSuccess: () => {
       qc.invalidateQueries(['menu-items'])
       setShowAddItem(false); setEditItem(null)
-      setItemForm({ name:'', description:'', price:'', category: selectedCat || '', isVeg:'false' })
+      setItemForm({ name:'', description:'', price:'', category: selectedCat || '', type:'product', duration:'' })
       setImageFile(null)
       toast.success(editItem ? 'Item updated' : 'Item added')
     },
@@ -66,13 +66,13 @@ export default function RestaurantMenu() {
 
   const startEditItem = (item) => {
     setEditItem(item)
-    setItemForm({ name: item.name, description: item.description||'', price: String(item.price), category: item.category?._id||item.category, isVeg: String(item.isVeg) })
+    setItemForm({ name: item.name, description: item.description||'', price: String(item.price), category: item.category?._id||item.category, type: item.type||'product', duration: item.duration ? String(item.duration) : '' })
     setShowAddItem(true)
   }
 
   const openAddItem = () => {
     setEditItem(null)
-    setItemForm({ name:'', description:'', price:'', category: selectedCat || (categories[0]?._id || ''), isVeg:'false' })
+    setItemForm({ name:'', description:'', price:'', category: selectedCat || (categories[0]?._id || ''), type:'product', duration:'' })
     setImageFile(null)
     setShowAddItem(true)
   }
@@ -123,7 +123,7 @@ export default function RestaurantMenu() {
       <div className="flex-1 flex flex-col gap-4 overflow-hidden">
         <div className="flex items-center justify-between shrink-0">
           <h3 className="font-semibold text-surface-900 text-sm">
-            Menu Items {items.length > 0 && <span className="text-surface-400 font-normal">({items.length})</span>}
+            Catalog Items {items.length > 0 && <span className="text-surface-400 font-normal">({items.length})</span>}
           </h3>
           <button onClick={openAddItem} className="btn-primary">
             <Plus size={15} /> Add Item
@@ -135,26 +135,26 @@ export default function RestaurantMenu() {
             <div className="flex justify-center py-12"><Loader2 className="animate-spin text-surface-400" size={24} /></div>
           ) : items.length === 0 ? (
             <div className="text-center py-16 text-surface-400">
-              <UtensilsCrossed size={32} className="mx-auto mb-3 opacity-30" />
-              <p className="text-sm">No items yet. Add your first menu item!</p>
+              <Package size={32} className="mx-auto mb-3 opacity-30" />
+              <p className="text-sm">No items yet. Add your first catalog item!</p>
             </div>
           ) : items.map(item => (
             <div key={item._id} className={`card p-4 flex items-start gap-4 ${!item.isAvailable ? 'opacity-60' : ''}`}>
               {item.imageUrl
                 ? <img src={item.imageUrl} alt={item.name} className="w-16 h-16 rounded-xl object-cover shrink-0" />
-                : <div className="w-16 h-16 bg-surface-100 rounded-xl flex items-center justify-center shrink-0 text-2xl">🍽️</div>
+                : <div className="w-16 h-16 bg-surface-100 rounded-xl flex items-center justify-center shrink-0 text-2xl">📦</div>
               }
               <div className="flex-1 min-w-0">
                 <div className="flex items-start gap-2">
                   <p className="font-semibold text-surface-900">{item.name}</p>
-                  {item.isVeg
-                    ? <span className="w-4 h-4 border-2 border-green-500 rounded flex items-center justify-center shrink-0"><span className="w-2 h-2 bg-green-500 rounded-full" /></span>
-                    : <span className="w-4 h-4 border-2 border-red-500 rounded flex items-center justify-center shrink-0"><span className="w-2 h-2 bg-red-500 rounded-full" /></span>
-                  }
+                  <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${item.type === 'service' ? 'bg-blue-100 text-blue-700' : 'bg-surface-100 text-surface-600'}`}>
+                    {item.type === 'service' ? 'Service' : 'Product'}
+                  </span>
                 </div>
                 <p className="text-xs text-surface-500 mt-0.5 line-clamp-1">{item.description}</p>
                 <div className="flex items-center gap-3 mt-2">
                   <span className="font-bold text-brand-600">₹{item.price}</span>
+                  {item.duration && <span className="text-xs text-blue-500">{item.duration} min</span>}
                   <span className="text-xs text-surface-400">{item.category?.name}</span>
                   <span className="text-xs text-surface-400">{item.totalOrdered} orders</span>
                 </div>
@@ -182,14 +182,14 @@ export default function RestaurantMenu() {
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl w-full max-w-md p-6 shadow-xl">
             <div className="flex items-center justify-between mb-5">
-              <h3 className="font-display font-semibold text-surface-900">{editItem ? 'Edit Item' : 'Add Menu Item'}</h3>
+              <h3 className="font-display font-semibold text-surface-900">{editItem ? 'Edit Item' : 'Add Catalog Item'}</h3>
               <button onClick={() => { setShowAddItem(false); setEditItem(null) }} className="text-surface-400 hover:text-surface-700"><X size={20} /></button>
             </div>
 
             <div className="space-y-4">
               <div>
                 <label className="label">Item Name *</label>
-                <input className="input" placeholder="e.g. Butter Chicken" value={itemForm.name} onChange={e => setItemForm(f => ({ ...f, name: e.target.value }))} />
+                <input className="input" placeholder="e.g. Haircut, Laptop Stand" value={itemForm.name} onChange={e => setItemForm(f => ({ ...f, name: e.target.value }))} />
               </div>
               <div>
                 <label className="label">Description</label>
@@ -201,13 +201,19 @@ export default function RestaurantMenu() {
                   <input type="number" className="input" placeholder="0" value={itemForm.price} onChange={e => setItemForm(f => ({ ...f, price: e.target.value }))} />
                 </div>
                 <div>
-                  <label className="label">Type</label>
-                  <select className="input" value={itemForm.isVeg} onChange={e => setItemForm(f => ({ ...f, isVeg: e.target.value }))}>
-                    <option value="false">Non-Veg 🔴</option>
-                    <option value="true">Veg 🟢</option>
+                  <label className="label">Item Type</label>
+                  <select className="input" value={itemForm.type} onChange={e => setItemForm(f => ({ ...f, type: e.target.value }))}>
+                    <option value="product">📦 Product</option>
+                    <option value="service">🛠️ Service</option>
                   </select>
                 </div>
               </div>
+              {itemForm.type === 'service' && (
+                <div>
+                  <label className="label">Duration (minutes)</label>
+                  <input type="number" className="input" placeholder="e.g. 30" value={itemForm.duration} onChange={e => setItemForm(f => ({ ...f, duration: e.target.value }))} />
+                </div>
+              )}
               <div>
                 <label className="label">Category *</label>
                 <select className="input" value={itemForm.category} onChange={e => setItemForm(f => ({ ...f, category: e.target.value }))}>

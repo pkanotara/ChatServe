@@ -200,7 +200,7 @@ const sendButtonFromMainBot = (to, bodyText, buttons) => {
  * Download media from WhatsApp and upload to Cloudinary
  * WhatsApp sends mediaId, not URL — need to fetch the actual file
  */
-const downloadAndUploadMedia = async (mediaId, accessToken) => {
+const downloadAndUploadMedia = async (mediaId, accessToken, folder = 'ChatServe/logos') => {
   const axios = require('axios');
   const cloudinary = require('../config/cloudinary');
 
@@ -223,7 +223,7 @@ const downloadAndUploadMedia = async (mediaId, accessToken) => {
   // Step 3: Upload to Cloudinary
   return new Promise((resolve, reject) => {
     cloudinary.uploader.upload_stream(
-      { folder: 'ChatServe/logos', resource_type: 'image' },
+      { folder, resource_type: 'image' },
       (error, result) => {
         if (error) reject(error);
         else resolve(result.secure_url);

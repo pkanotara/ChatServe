@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
-// ─── Menu Category ─────────────────────────────────────────────────────────
-const menuCategorySchema = new mongoose.Schema({
+// ─── Catalog Category ──────────────────────────────────────────────────────
+const catalogCategorySchema = new mongoose.Schema({
   restaurant: { type: mongoose.Schema.Types.ObjectId, ref: 'Restaurant', required: true },
   name: { type: String, required: true, trim: true },
   description: String,
@@ -10,15 +10,20 @@ const menuCategorySchema = new mongoose.Schema({
   isActive: { type: Boolean, default: true },
 }, { timestamps: true });
 
-menuCategorySchema.index({ restaurant: 1 });
+catalogCategorySchema.index({ restaurant: 1 });
 
-// ─── Menu Item ──────────────────────────────────────────────────────────────
-const menuItemSchema = new mongoose.Schema({
+// ─── Catalog Item (Product or Service) ──────────────────────────────────────
+const catalogItemSchema = new mongoose.Schema({
   restaurant: { type: mongoose.Schema.Types.ObjectId, ref: 'Restaurant', required: true },
   category: { type: mongoose.Schema.Types.ObjectId, ref: 'MenuCategory', required: true },
   name: { type: String, required: true, trim: true },
   description: String,
   price: { type: Number, required: true, min: 0 },
+  // Product/Service classification
+  type: { type: String, enum: ['product', 'service'], default: 'product' },
+  // Service-specific fields
+  duration: { type: Number, default: null },   // duration in minutes (for services)
+  unit: { type: String, default: null },        // e.g. 'per hour', 'per session', 'per kg'
   imageUrl: String,
   imagePublicId: String,
   isAvailable: { type: Boolean, default: true },
@@ -29,10 +34,10 @@ const menuItemSchema = new mongoose.Schema({
   totalOrdered: { type: Number, default: 0 },
 }, { timestamps: true });
 
-menuItemSchema.index({ restaurant: 1, category: 1 });
-menuItemSchema.index({ restaurant: 1, isAvailable: 1 });
+catalogItemSchema.index({ restaurant: 1, category: 1 });
+catalogItemSchema.index({ restaurant: 1, isAvailable: 1 });
 
 module.exports = {
-  MenuCategory: mongoose.model('MenuCategory', menuCategorySchema),
-  MenuItem: mongoose.model('MenuItem', menuItemSchema),
+  MenuCategory: mongoose.model('MenuCategory', catalogCategorySchema),
+  MenuItem: mongoose.model('MenuItem', catalogItemSchema),
 };

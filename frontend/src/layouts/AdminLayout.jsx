@@ -2,12 +2,12 @@ import { Outlet, NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import {
   LayoutDashboard, Store, Megaphone,
-  UserCheck, LogOut, ChefHat, Bell
+  UserCheck, LogOut, Briefcase, Bell
 } from 'lucide-react'
 
 const navItems = [
   { to: '/admin', icon: LayoutDashboard, label: 'Dashboard', end: true },
-  { to: '/admin/restaurants', icon: Store, label: 'Restaurants' },
+  { to: '/admin/restaurants', icon: Store, label: 'Businesses' },
   { to: '/admin/onboarding', icon: UserCheck, label: 'Onboarding' },
   { to: '/admin/broadcast', icon: Megaphone, label: 'Broadcast' },
 ]
@@ -28,7 +28,7 @@ export default function AdminLayout() {
         {/* Brand */}
         <div className="flex items-center gap-3 px-5 py-4 border-b border-zinc-200">
           <div className="w-9 h-9 bg-orange-500 rounded-xl flex items-center justify-center">
-            <ChefHat size={20} className="text-white" />
+            <Briefcase size={20} className="text-white" />
           </div>
           <div>
             <p className="font-semibold text-zinc-900 text-sm leading-tight">ChatServe</p>

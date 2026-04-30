@@ -5,8 +5,8 @@ const showCart = async (ctx) => {
 
   const cart = customer.botSession.cart || [];
   if (cart.length === 0) {
-    await sendBtn(ctx, `Your cart is empty 🛒\n\nAdd some delicious items!`, [
-      { id: "order_food", title: "🍕 Order Food" },
+    await sendBtn(ctx, `Your cart is empty 🛒\n\nBrowse our catalog to add items!`, [
+      { id: "order_food", title: "📋 Browse Catalog" },
       { id: "help", title: "📞 Help" },
     ]);
     return;

@@ -1,5 +1,5 @@
 const Customer = require("../../models/Customer");
-const Restaurant = require("../../models/Restaurant");
+const Business = require("../../models/Restaurant"); // model name kept for DB compat
 const WhatsAppConfig = require("../../models/WhatsAppConfig");
 const logger = require("../../utils/logger");
 
@@ -22,19 +22,19 @@ const buildContext = async ({
     return null;
   }
 
-  const restaurant = await Restaurant.findById(waConfig.restaurant);
-  if (!restaurant || restaurant.status !== "active") return null;
+  const business = await Business.findById(waConfig.restaurant);
+  if (!business || business.status !== "active") return null;
 
   const token = waConfig.accessToken || process.env.MAIN_ACCESS_TOKEN;
 
   let customer = await Customer.findOne({
-    restaurant: restaurant._id,
+    restaurant: business._id,
     whatsappNumber: senderNumber,
   });
 
   if (!customer) {
     customer = await Customer.create({
-      restaurant: restaurant._id,
+      restaurant: business._id,
       whatsappNumber: senderNumber,
       botSession: { step: "idle", cart: [], lastActivity: new Date() },
     });
@@ -64,7 +64,7 @@ const buildContext = async ({
     contacts,
 
     waConfig,
-    restaurant,
+    restaurant: business,
     customer,
     token,
 

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
-import { ChefHat, Eye, EyeOff, Loader2, ShieldCheck, Store } from 'lucide-react'
+import { Briefcase, Eye, EyeOff, Loader2, ShieldCheck, Store } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 export default function LoginPage() {
@@ -46,7 +46,7 @@ export default function LoginPage() {
             <div>
               <div className="inline-flex items-center gap-4 rounded-[22px] border border-white/10 bg-white/5 px-5 py-4 backdrop-blur-xl">
                 <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 shadow-[0_18px_50px_rgba(249,115,22,0.35)]">
-                  <ChefHat size={28} className="text-white" />
+                  <Briefcase size={28} className="text-white" />
                 </div>
                 <div>
                   <h1 className="text-[2.05rem] font-semibold leading-none tracking-tight text-white">
@@ -62,11 +62,11 @@ export default function LoginPage() {
                 </p>
 
                 <h2 className="mt-6 text-5xl font-bold leading-[1.07] tracking-tight text-white">
-                  Sign in and run your restaurant like a product.
+                  Sign in and run your business like a pro.
                 </h2>
 
                 <p className="mt-6 text-[15px] leading-7 text-white/70">
-                  Built for restaurant owners and platform admins to handle onboarding, automation,
+                  Built for business owners and platform admins to handle onboarding, automation,
                   WhatsApp integrations, and day-to-day operations with confidence.
                 </p>
               </div>
@@ -76,9 +76,9 @@ export default function LoginPage() {
                   <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-orange-500/15 text-orange-200 ring-1 ring-orange-500/15">
                     <Store size={18} />
                   </div>
-                  <h3 className="text-sm font-semibold text-white">Restaurant Access</h3>
+                  <h3 className="text-sm font-semibold text-white">Business Access</h3>
                   <p className="mt-2 text-sm leading-6 text-white/70">
-                    Dedicated workspace for each restaurant.
+                    Dedicated workspace for each business.
                   </p>
                 </div>
 
@@ -102,10 +102,10 @@ export default function LoginPage() {
             {/* Mobile brand */}
             <div className="mb-7 text-center lg:hidden">
               <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 shadow-[0_18px_50px_rgba(249,115,22,0.35)]">
-                <ChefHat size={28} className="text-white" />
+                <Briefcase size={28} className="text-white" />
               </div>
               <h1 className="text-2xl font-bold tracking-tight text-white">ChatServe</h1>
-              <p className="mt-1 text-sm text-white/70">WhatsApp Restaurant Platform</p>
+              <p className="mt-1 text-sm text-white/70">WhatsApp Business Platform</p>
             </div>
 
             <div className="relative overflow-hidden rounded-[30px] border border-white/10 bg-white/[0.06] p-6 shadow-[0_18px_70px_rgba(0,0,0,0.45)] backdrop-blur-2xl sm:p-7 lg:p-8">
@@ -133,7 +133,7 @@ export default function LoginPage() {
                     />
 
                     {[
-                      { value: 'restaurant_owner', label: 'Restaurant Owner', icon: Store },
+                      { value: 'restaurant_owner', label: 'Business Owner', icon: Store },
                       { value: 'super_admin', label: 'Platform Admin', icon: ShieldCheck },
                     ].map(({ value, label, icon: Icon }) => (
                       <button
@@ -167,7 +167,7 @@ export default function LoginPage() {
                       type="email"
                       required
                       className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3.5 text-sm text-white placeholder:text-white/35 outline-none transition-all focus:border-orange-400/60 focus:bg-white/10 focus:ring-4 focus:ring-orange-500/10"
-                      placeholder="you@restaurant.com"
+                      placeholder="you@business.com"
                       value={form.email}
                       onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
                     />
@@ -217,7 +217,7 @@ export default function LoginPage() {
 
                   <div className="mt-3 grid gap-3 sm:grid-cols-2">
                     <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
-                      <p className="text-xs font-semibold text-white">Restaurant Owner</p>
+                      <p className="text-xs font-semibold text-white">Business Owner</p>
                       <p className="mt-2 text-xs leading-6 text-white/70">
                         <span className="font-medium text-white">Email:</span> demo@spicegarden.com
                       </p>

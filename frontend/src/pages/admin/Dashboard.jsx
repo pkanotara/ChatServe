@@ -45,14 +45,14 @@ export default function AdminDashboard() {
       {/* Stats grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
-          label="Total Restaurants"
+          label="Total Businesses"
           value={fmt(stats?.totalRestaurants)}
           icon={Store}
           color="brand"
           sub={`${stats?.activeRestaurants ?? 0} active`}
         />
         <StatCard
-          label="Active Restaurants"
+          label="Active Businesses"
           value={fmt(stats?.activeRestaurants)}
           icon={Store}
           color="green"
@@ -65,7 +65,7 @@ export default function AdminDashboard() {
           sub="awaiting Meta signup"
         />
         <StatCard
-          label="Restaurant Owners"
+          label="Business Owners"
           value={fmt(stats?.totalOwners)}
           icon={Users}
           color="purple"
@@ -75,7 +75,7 @@ export default function AdminDashboard() {
       {/* Restaurants list */}
       <div className="card p-6">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="font-semibold text-surface-900">Recent Restaurants</h3>
+          <h3 className="font-semibold text-surface-900">Recent Businesses</h3>
           <Link to="/admin/restaurants" className="text-xs text-orange-500 hover:text-orange-600 font-medium">
             View all →
           </Link>
@@ -101,7 +101,7 @@ export default function AdminDashboard() {
               </Link>
             ))
           ) : (
-            <p className="text-sm text-surface-400 text-center py-6">No restaurants yet</p>
+            <p className="text-sm text-surface-400 text-center py-6">No businesses yet</p>
           )}
         </div>
       </div>

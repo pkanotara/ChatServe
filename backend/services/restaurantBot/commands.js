@@ -40,6 +40,12 @@ const runGlobalCommands = async (ctx, handlers) => {
     return true;
   }
 
+  // help
+  if (inputText === "help" || lower === "help") {
+    await handlers.showHelp(ctx);
+    return true;
+  }
+
   if (inputText === "clear_cart") {
     // clear cart + reset flow
     const { customer } = ctx;

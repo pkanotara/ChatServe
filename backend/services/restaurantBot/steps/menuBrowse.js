@@ -24,7 +24,7 @@ const showCategories = async (ctx) => {
   if (categories.length === 0) {
     await send(
       ctx,
-      `😔 Menu is being updated. Please check back soon!\n\nSend *menu* to go back.`,
+      `😔 Our catalog is being updated. Please check back soon!\n\nSend *menu* to go back.`,
     );
     return;
   }
@@ -45,23 +45,25 @@ const showCategories = async (ctx) => {
 
   await sendList(
     ctx,
-    `🍽️ Our Menu`,
-    `Nice 😄 Here's what we have!\n\nSelect a category to browse:`,
+    `📋 Our Catalog`,
+    `Great 😄 Here's what we offer!\n\nSelect a category to browse:`,
     `Send *cart* anytime to view your cart`,
-    "Browse Menu",
+    "Browse Catalog",
     sections,
   );
 };
 
 // ── Send 1 item as “card”: image(with caption) + short buttons ──────────────
 const sendItemCard = async (ctx, item, { showMoreButton = false } = {}) => {
-  const vegLine = item.isVeg ? "🟢 Veg" : "🔴 Non-Veg";
+  const typeLine = item.type === "service"
+    ? `🛠️ Service${item.duration ? ` · ${item.duration} min` : ""}`
+    : "📦 Product";
 
   const caption =
     `*${safe(item.name, 60)}*\n` +
     `₹${item.price}\n\n` +
-    `${vegLine}\n` +
-    `${safe(item.description, 700)}`; // caption supports more than list descriptions
+    `${typeLine}\n` +
+    `${safe(item.description, 700)}`;
 
   // 1) Image message (with caption)
   if (item.imageUrl) {
@@ -120,7 +122,7 @@ const sendItemCardsBatch = async (ctx, items, startIndex, limit) => {
   // if done, show end message
   if (customer.botSession.currentItemIndex >= total) {
     await sendBtn(ctx, `That's all in this category 😊`, [
-      { id: "order_food", title: "🍕 Browse More" },
+      { id: "order_food", title: "📋 Browse More" },
       { id: "view_cart", title: "🛒 View Cart" },
     ]);
   }
@@ -146,7 +148,7 @@ const handleCategorySelect = async (ctx) => {
       ctx,
       `😔 No items available in *${category?.name}* right now.`,
       [
-        { id: "order_food", title: "🍕 Browse Menu" },
+        { id: "order_food", title: "📋 Browse Catalog" },
         { id: "view_cart", title: "🛒 View Cart" },
       ],
     );

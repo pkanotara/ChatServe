@@ -67,7 +67,7 @@ export default function RestaurantWhatsApp() {
     <div className="max-w-2xl space-y-6">
       <div>
         <h2 className="font-bold text-xl text-zinc-900">WhatsApp Business Setup</h2>
-        <p className="text-zinc-500 text-sm mt-0.5">Configure your restaurant's WhatsApp ordering chatbot</p>
+        <p className="text-zinc-500 text-sm mt-0.5">Configure your WhatsApp Business chatbot</p>
       </div>
 
       {/* Status Card */}
@@ -158,7 +158,7 @@ export default function RestaurantWhatsApp() {
 
           <div className="space-y-5 mb-6">
             {[
-              { done: true, title: 'Restaurant details collected', desc: 'Your business info has been saved' },
+              { done: true, title: 'Business details collected', desc: 'Your business info has been saved' },
               { done: !!wa?.targetBusinessNumber, title: 'Target number selected', desc: wa?.targetBusinessNumber || 'Not set' },
               { done: wa?.signupStatus === 'signup_completed' || isConfigured, title: 'Meta Embedded Signup', desc: 'Log into Facebook and verify your WhatsApp number' },
               { done: isFullyConfigured, title: 'WABA & Phone Number configured', desc: hasPendingIds ? 'Pending — use manual setup below' : 'Automatic after signup' },
@@ -237,7 +237,7 @@ export default function RestaurantWhatsApp() {
                 value={manualForm.phoneNumberId} onChange={e => setManualForm(f => ({ ...f, phoneNumberId: e.target.value }))} />
             </div>
             <div>
-              <label className="label">Access Token (optional — uses platform token if empty)</label>
+              <label className="label">Access Token </label>
               <input className="input font-mono text-xs" placeholder="EAAxxxxxxx..."
                 value={manualForm.accessToken} onChange={e => setManualForm(f => ({ ...f, accessToken: e.target.value }))} />
             </div>

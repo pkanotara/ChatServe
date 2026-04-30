@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext'
 import api from '../services/api'
 import { useState } from 'react'
 import {
-  LayoutDashboard, UtensilsCrossed, ShoppingBag,
+  LayoutDashboard, Package, ShoppingBag,
   Users, MessageCircle, UserCircle, LogOut, Copy, KeyRound, Eye, EyeOff, X, Loader2, Megaphone
 } from 'lucide-react'
 import toast from 'react-hot-toast'
@@ -12,11 +12,11 @@ import toast from 'react-hot-toast'
 const navItems = [
   { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard', end: true },
   { to: '/dashboard/orders', icon: ShoppingBag, label: 'Orders' },
-  { to: '/dashboard/menu', icon: UtensilsCrossed, label: 'Menu' },
+  { to: '/dashboard/catalog', icon: Package, label: 'Catalog' },
   { to: '/dashboard/customers', icon: Users, label: 'Customers' },
   { to: '/dashboard/broadcast', icon: Megaphone, label: 'Broadcast' },
   { to: '/dashboard/whatsapp', icon: MessageCircle, label: 'WhatsApp Setup' },
-  { to: '/dashboard/profile', icon: UserCircle, label: 'Restaurant Profile' },
+  { to: '/dashboard/profile', icon: UserCircle, label: 'Business Profile' },
 ]
 
 const getStrength = (pw) => {
@@ -215,13 +215,13 @@ export default function RestaurantLayout() {
     staleTime: 60000,
   })
 
-  const restaurantName = profile?.name || 'My Restaurant'
+  const restaurantName = profile?.name || 'My Business'
   const restaurantId = profile?._id
 
   const copyRestaurantId = () => {
     if (restaurantId) {
       navigator.clipboard.writeText(restaurantId)
-      toast.success('Restaurant ID copied!')
+      toast.success('Business ID copied!')
     }
   }
 
@@ -239,7 +239,7 @@ export default function RestaurantLayout() {
             }
             <div className="min-w-0">
               <p className="font-semibold text-zinc-900 text-sm leading-tight truncate">{restaurantName}</p>
-              <p className="text-zinc-400 text-xs">Restaurant Panel</p>
+              <p className="text-zinc-400 text-xs">Business Panel</p>
             </div>
           </div>
           {/* Restaurant ID */}
@@ -249,7 +249,7 @@ export default function RestaurantLayout() {
               className="w-full flex items-center justify-between px-2 py-1.5 bg-zinc-50 hover:bg-zinc-100 rounded-lg transition-colors group"
             >
               <div className="min-w-0">
-                <p className="text-xs text-zinc-400">Restaurant ID</p>
+                <p className="text-xs text-zinc-400">Business ID</p>
                 <p className="font-mono text-xs text-zinc-600 truncate">{restaurantId}</p>
               </div>
               <Copy size={11} className="text-zinc-400 group-hover:text-orange-500 shrink-0 ml-2 transition-colors" />

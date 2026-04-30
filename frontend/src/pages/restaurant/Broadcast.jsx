@@ -9,9 +9,9 @@ import toast from 'react-hot-toast'
 
 const TEMPLATES = [
   { label: 'Special Offer', text: '🎉 Special offer just for you! Get 20% off your next order today. Use code SAVE20 at checkout. Valid till midnight!' },
-  { label: 'New Menu Item', text: '🍽️ Exciting news! We\'ve added new items to our menu. Check out our latest additions and place your order now!' },
+  { label: 'New Catalog Item', text: '📋 Exciting news! We\'ve added new items to our catalog. Check out our latest additions and place your order now!' },
   { label: 'Weekend Deal', text: '🎊 Weekend special! Enjoy free delivery on all orders above ₹299 this weekend only. Order now via WhatsApp!' },
-  { label: 'Festive Offer', text: '✨ Celebrating the festive season with you! Enjoy special discounts on all orders today. Happy ordering!' },
+  { label: 'Festive Offer', text: '✨ Celebrating the festive season with you! Enjoy special discounts on all orders today. Happy shopping!' },
 ]
 
 export default function RestaurantBroadcast() {

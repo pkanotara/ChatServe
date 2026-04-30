@@ -14,7 +14,9 @@ const orderSchema = new mongoose.Schema({
   customerNumber: { type: String, required: true },
   customerName: String,
   orderNumber: { type: String, unique: true },
-  deliveryType: { type: String, enum: ['delivery', 'pickup'], default: 'pickup' },
+  // Order classification: purchase (products) or booking (services)
+  orderType: { type: String, enum: ['purchase', 'booking'], default: 'purchase' },
+  fulfillmentType: { type: String, enum: ['delivery', 'pickup', 'on_site', 'remote'], default: 'pickup' },
   deliveryAddress: String,
   notes: String,
   items: [orderItemSchema],
@@ -28,7 +30,7 @@ const orderSchema = new mongoose.Schema({
   },
   paymentMethod: {
     type: String,
-    enum: ['cash_on_delivery', 'stripe', 'pending'],
+    enum: ['cash_on_delivery', 'upi', 'stripe', 'pending'],
     default: 'pending',
   },
   paymentStatus: {

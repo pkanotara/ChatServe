@@ -95,10 +95,10 @@ const handleCheckoutConfirm = async (ctx) => {
 
     await sendBtn(
       ctx,
-      `💰 *Step 3 of 3: Payment*\n\nTotal: ₹${total}\n\nHow would you like to pay?`,
+      `💰 *Step 3 of 3: Payment*\n\nTotal: ₹${total}\n\nPayment Method: *Cash on Delivery* 💵\n\nConfirm to place your order?`,
       [
-        { id: "pay_cod", title: "💵 Cash on Delivery" },
-        { id: "pay_upi", title: "📲 UPI" },
+        { id: "pay_cod", title: "✅ Confirm & Place Order" },
+        { id: "cancel_order", title: "❌ Cancel" },
       ],
     );
     return;
@@ -108,23 +108,18 @@ const handleCheckoutConfirm = async (ctx) => {
 };
 
 const handlePayment = async (ctx) => {
-  const { inputText, restaurant } = ctx;
+  const { inputText } = ctx;
 
-  if (inputText === "pay_upi") {
-    await sendBtn(
-      ctx,
-      `📲 *UPI Payment*\n\nSend payment to:\n*UPI ID:* ${restaurant.upiId || "Contact restaurant"}\n\nAfter payment, tap Confirm 👇`,
-      [
-        { id: "payment_done", title: "✅ Payment Done" },
-        { id: "cancel_order", title: "❌ Cancel" },
-      ],
-    );
-    return;
+  if (inputText === "pay_cod") {
+    return placeOrder(ctx, "cash_on_delivery");
   }
 
-  if (inputText === "pay_cod" || inputText === "payment_done") {
-    const method = inputText === "pay_cod" ? "cash_on_delivery" : "upi";
-    return placeOrder(ctx, method);
+  if (inputText === "cancel_order") {
+    const { customer } = ctx;
+    customer.botSession.step = "idle";
+    await customer.save();
+    await send(ctx, `❌ Order cancelled.\n\nType *hi* to start again!`);
+    return;
   }
 
   // fallback
@@ -165,7 +160,7 @@ const placeOrder = async (ctx, paymentMethod) => {
     customer.botSession.lastOrderNumber = order.orderNumber;
     await customer.save();
 
-    // Update menu item stats
+    // Update catalog item stats
     for (const item of order.items) {
       if (item.menuItem) {
         await MenuItem.findByIdAndUpdate(item.menuItem, {
@@ -176,9 +171,7 @@ const placeOrder = async (ctx, paymentMethod) => {
 
     await sendBtn(
       ctx,
-      `Done 🎉 *Your order is placed!*\n\n📋 Order ID: *${order.orderNumber}*\n💰 Total: ₹${order.total}\n💳 Payment: ${
-        paymentMethod === "cash_on_delivery" ? "Cash on Delivery" : "UPI"
-      }\n\nWe'll notify you when your order is ready! 🚀`,
+      `Done 🎉 *Your order is placed!*\n\n📋 Order ID: *${order.orderNumber}*\n💰 Total: ₹${order.total}\n💳 Payment: Cash on Delivery\n\nWe'll notify you when your order is ready! 🚀`,
       [
         { id: "track_order", title: "📦 Track Order" },
         { id: "order_food", title: "🔁 Order Again" },

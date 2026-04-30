@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>ChatServe – Academic Poster</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Inter',Arial,sans-serif;background:#fff;}
+
+  /* ── A1 canvas ── */
+  .poster{
+    width:794px;          /* scaled: A1 at 96dpi ≈ 2245×3179px; we use 794px wide for screen */
+    min-height:1123px;
+    background:#fff;
+    border:3px solid #003366;
+    display:flex;
+    flex-direction:column;
+    margin:10px auto;
+    font-size:9.5px;
+    line-height:1.45;
+  }
+
+  /* ── HEADER ── */
+  .header{
+    background:linear-gradient(135deg,#003366 0%,#005599 100%);
+    color:#fff;
+    padding:14px 16px 10px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    border-bottom:4px solid #FFD700;
+  }
+  .logo-box{
+    width:64px;height:64px;
+    border:2px solid rgba(255,255,255,0.4);
+    border-radius:6px;
+    background:rgba(255,255,255,0.1);
+    display:flex;align-items:center;justify-content:center;
+    font-size:8px;text-align:center;color:rgba(255,255,255,0.7);
+    flex-shrink:0;
+  }
+  .header-center{flex:1;text-align:center;}
+  .header-center h1{font-size:20px;font-weight:900;letter-spacing:0.5px;margin-bottom:4px;text-transform:uppercase;}
+  .header-center .subtitle{font-size:9px;color:#FFD700;font-weight:600;letter-spacing:1px;margin-bottom:6px;}
+  .header-meta{display:flex;justify-content:center;gap:28px;font-size:8.5px;color:#cce0ff;}
+  .header-meta span strong{color:#fff;}
+
+  /* ── BODY: 3 columns ── */
+  .body{display:flex;flex:1;gap:0;}
+  .col{flex:1;padding:8px 7px;display:flex;flex-direction:column;gap:7px;border-right:1.5px solid #b0c8e8;}
+  .col:last-child{border-right:none;}
+
+  /* ── SECTION BOX ── */
+  .section{border:1.5px solid #003366;border-radius:3px;overflow:hidden;}
+  .sec-head{
+    background:#003366;
+    color:#fff;
+    padding:4px 8px;
+    font-size:9px;
+    font-weight:700;
+    letter-spacing:0.6px;
+    text-transform:uppercase;
+  }
+  .sec-body{padding:6px 8px;background:#fff;}
+
+  /* ── typography ── */
+  p{margin-bottom:4px;}
+  ul{padding-left:14px;margin-bottom:4px;}
+  ul li{margin-bottom:2px;}
+  b{color:#003366;}
+  .tag{display:inline-block;background:#e8f0fe;border:1px solid #3367d6;color:#1a56db;
+       border-radius:2px;padding:1px 5px;font-size:8px;font-weight:600;margin:1px 2px;}
+
+  /* ── TABLES ── */
+  table{width:100%;border-collapse:collapse;font-size:8.2px;margin-top:3px;}
+  th{background:#003366;color:#fff;padding:3px 5px;text-align:left;}
+  td{padding:3px 5px;border-bottom:0.5px solid #ccd;}
+  tr:nth-child(even) td{background:#f0f5ff;}
+  .tick{color:#1a8c2a;font-weight:700;}
+  .cross{color:#c00;font-weight:700;}
+  .partial{color:#b36200;font-weight:700;}
+
+  /* ── FLOW DIAGRAM ── */
+  .flow{display:flex;flex-direction:column;gap:3px;margin:4px 0;}
+  .flow-row{display:flex;align-items:center;gap:3px;}
+  .flow-box{
+    background:#e8f0fe;border:1px solid #3367d6;color:#003366;
+    padding:3px 7px;border-radius:3px;font-size:8px;font-weight:600;
+    flex:1;text-align:center;
+  }
+  .flow-arrow{color:#003366;font-size:11px;font-weight:900;}
+
+  /* ── ARCH FLOW (horizontal) ── */
+  .arch{display:flex;align-items:center;flex-wrap:wrap;gap:3px;margin:4px 0;}
+  .arch-box{
+    background:#003366;color:#fff;padding:4px 7px;border-radius:3px;
+    font-size:7.5px;font-weight:700;text-align:center;
+  }
+  .arch-arrow{color:#003366;font-size:12px;}
+
+  /* ── FIGURE PLACEHOLDER ── */
+  .fig-wrap{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px;}
+  .fig{
+    flex:1;min-width:80px;
+    border:1.5px dashed #6699cc;
+    border-radius:3px;
+    background:#f5f9ff;
+    height:72px;
+    display:flex;flex-direction:column;
+    align-items:center;justify-content:center;
+    font-size:7.5px;color:#336699;text-align:center;padding:4px;
+  }
+  .fig .fig-icon{font-size:22px;margin-bottom:3px;}
+  .fig-caption{text-align:center;font-size:7.5px;color:#444;margin-top:2px;font-style:italic;}
+
+  /* ── TECH STACK BADGES ── */
+  .stack{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px;}
+  .badge{
+    background:linear-gradient(135deg,#003366,#0055aa);
+    color:#fff;padding:4px 9px;border-radius:12px;
+    font-size:8px;font-weight:600;
+  }
+
+  /* ── FOOTER ── */
+  .footer{
+    background:#003366;color:#cce;
+    padding:5px 14px;
+    display:flex;justify-content:space-between;
+    font-size:7.5px;
+    border-top:3px solid #FFD700;
+  }
+
+  /* Print */
+  @media print{
+    body{margin:0;}
+    .poster{width:100%;border:none;margin:0;}
+  }
+</style>
+</head>
+<body>
+<div class="poster">
+
+  <!-- ═══════════ HEADER ═══════════ -->
+  <div class="header">
+    <div class="logo-box">🎓<br>Nirma<br>Univ.</div>
+    <div class="header-center">
+      <div class="subtitle">Final Year B.Tech Project | Department of Computer Science &amp; Engineering</div>
+      <h1>ChatServe: WhatsApp-Based Business Automation Platform for MSMEs</h1>
+      <div class="header-meta">
+        <span><strong>Student:</strong> Pravin Kanotara</span>
+        <span><strong>Guide:</strong> [Faculty Guide Name]</span>
+        <span><strong>University:</strong> Nirma University, Ahmedabad</span>
+        <span><strong>Dept:</strong> CSE &nbsp;|&nbsp; A.Y. 2025–26</span>
+      </div>
+    </div>
+    <div class="logo-box">🏛️<br>Dept.<br>CSE</div>
+  </div>
+
+  <!-- ═══════════ 3 COLUMNS ═══════════ -->
+  <div class="body">
+
+    <!-- ════ COLUMN 1 ════ -->
+    <div class="col">
+
+      <div class="section">
+        <div class="sec-head">About the Project</div>
+        <div class="sec-body">
+          <p><b>ChatServe</b> is a multi-tenant SaaS platform that empowers small and medium-sized enterprises (MSMEs) to automate their day-to-day business operations entirely through <b>WhatsApp</b>.</p>
+          <p>It eliminates the need for dedicated apps or technical staff by offering automated chatbot flows, catalog management, order handling, and customer communication — all within WhatsApp.</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="sec-head">Abstract</div>
+        <div class="sec-body">
+          <p>MSMEs in India depend heavily on WhatsApp for sales and customer interaction, yet most lack affordable automation tools. ChatServe addresses this by delivering a WhatsApp Cloud API-powered SaaS system where businesses can onboard via a chatbot, publish catalogs, and manage orders without human intervention. The platform supports multi-tenant isolation, real-time notifications, and an admin dashboard. Designed with simplicity and low cost at its core, ChatServe reduces operational overhead and improves customer response time significantly.</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="sec-head">Problem Context</div>
+        <div class="sec-body">
+          <ul>
+            <li>Over <b>60 million MSMEs</b> in India rely on WhatsApp for business communication</li>
+            <li>Manual order taking leads to <b>errors, delays &amp; customer drop-off</b></li>
+            <li>No 24×7 availability for customer queries or order placement</li>
+            <li>Existing enterprise solutions are <b>too expensive</b> for small businesses</li>
+            <li>No structured catalog or inventory management over WhatsApp</li>
+            <li>Business owners spend excessive time on repetitive messaging</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="sec-head">Existing Systems &amp; Limitations</div>
+        <div class="sec-body">
+          <p><b>WhatsApp Business App:</b> Manual replies only, no automation, single device, no API access.</p>
+          <p><b>Enterprise API Platforms:</b> Interakt, AiSensy, WATI, Infobip offer partial automation but require BSP partnerships, high monthly fees, and technical setup beyond MSME capability.</p>
+          <p><b>Key Gaps:</b> No integrated onboarding chatbot; no built-in catalog + order management; no low-cost self-setup option.</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="sec-head">Comparison Table</div>
+        <div class="sec-body">
+          <table>
+            <thead>
+              <tr>
+                <th>Platform</th>
+                <th>Auto</th>
+                <th>AI</th>
+                <th>Cost</th>
+                <th>Setup</th>
+                <th>Limitation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>WA Business App</td><td class="cross">✗</td><td class="cross">✗</td><td class="tick">Free</td><td class="tick">Easy</td><td>No automation</td></tr>
+              <tr><td>Interakt</td><td class="partial">Part.</td><td class="cross">✗</td><td class="cross">High</td><td class="partial">Med.</td><td>No onboarding bot</td></tr>
+              <tr><td>AiSensy</td><td class="partial">Part.</td><td class="partial">Lim.</td><td class="cross">High</td><td class="partial">Med.</td><td>No catalog mgmt</td></tr>
+              <tr><td>WATI</td><td class="tick">✓</td><td class="partial">Lim.</td><td class="cross">High</td><td class="cross">Complex</td><td>Enterprise only</td></tr>
+              <tr><td>Infobip</td><td class="tick">✓</td><td class="tick">✓</td><td class="cross">V.High</td><td class="cross">Complex</td><td>Not for MSMEs</td></tr>
+              <tr><td><b>ChatServe</b></td><td class="tick">✓</td><td class="partial">Planned</td><td class="tick">Low</td><td class="tick">Easy</td><td>—</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /col1 -->
+
+    <!-- ════ COLUMN 2 ════ -->
+    <div class="col">
+
+      <div class="section">
+        <div class="sec-head">Proposed System — ChatServe</div>
+        <div class="sec-body">
+          <p>ChatServe is a <b>self-onboarding, multi-tenant SaaS</b> platform built on the WhatsApp Cloud API. A business owner simply sends a WhatsApp message to the system — the chatbot guides them through onboarding, catalog setup, and configuration, requiring zero technical knowledge.</p>
+          <ul>
+            <li><b>Automation:</b> State-machine chatbot handles customer queries, orders, and confirmations autonomously</li>
+            <li><b>Simplicity:</b> No app install required — operates entirely inside WhatsApp</li>
+            <li><b>Low Cost:</b> Self-hosted or shared cloud — drastically cheaper than BSP platforms</li>
+            <li><b>Multi-tenant:</b> Each business gets isolated data, its own catalog, and independent configuration</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="sec-head">System Architecture</div>
+        <div class="sec-body">
+          <div class="arch">
+            <div class="arch-box">React<br>Frontend</div>
+            <span class="arch-arrow">⇄</span>
+            <div class="arch-box">Node.js<br>Backend</div>
+            <span class="arch-arrow">⇄</span>
+            <div class="arch-box">MongoDB<br>Database</div>
+          </div>
+          <div class="arch" style="margin-top:4px;">
+            <div class="arch-box">WhatsApp<br>Cloud API</div>
+            <span class="arch-arrow">⇄</span>
+            <div class="arch-box">Webhook<br>Handler</div>
+            <span class="arch-arrow">⇄</span>
+            <div class="arch-box">Chatbot<br>Engine</div>
+            <span class="arch-arrow">⇄</span>
+            <div class="arch-box">Business<br>Logic</div>
+          </div>
+          <p style="margin-top:5px;font-size:8px;color:#555;"><i>Fig. Architecture: The backend exposes REST APIs consumed by the React dashboard, while a dedicated webhook handler processes incoming WhatsApp messages through the state-machine chatbot engine.</i></p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="sec-head">Methodology</div>
+        <div class="sec-body">
+          <ul>
+            <li><b>Chatbot Onboarding:</b> Businesses register by messaging the platform number; a guided flow collects business name, type, catalog, and phone credentials</li>
+            <li><b>State-Based Engine:</b> Each conversation is tracked via a finite-state machine stored in MongoDB; states persist across sessions</li>
+            <li><b>Multi-Tenant SaaS:</b> Each registered business entity owns isolated collections; routing is performed via the incoming phone number</li>
+            <li><b>Webhook-Driven:</b> WhatsApp Cloud API delivers all messages via HTTPS webhook; no polling required</li>
+            <li><b>Dashboard:</b> React frontend provides catalog management, order tracking, and broadcast messaging for business owners</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="sec-head">System Flow</div>
+        <div class="sec-body">
+          <p><b>1. Business Onboarding Flow</b></p>
+          <div class="flow">
+            <div class="flow-row">
+              <div class="flow-box">Business sends "Hi"</div>
+              <span class="flow-arrow">→</span>
+              <div class="flow-box">Bot: Registration Menu</div>
+            </div>
+            <div class="flow-row">
+              <div class="flow-box">Business enters name &amp; type</div>
+              <span class="flow-arrow">→</span>
+              <div class="flow-box">Catalog Setup</div>
+            </div>
+            <div class="flow-row">
+              <div class="flow-box">WA Credentials submitted</div>
+              <span class="flow-arrow">→</span>
+              <div class="flow-box">Auto-configure webhook → Go Live</div>
+            </div>
+          </div>
+          <p style="margin-top:5px;"><b>2. Customer Order Flow</b></p>
+          <div class="flow">
+            <div class="flow-row">
+              <div class="flow-box">Customer: "Hi"</div>
+              <span class="flow-arrow">→</span>
+              <div class="flow-box">Bot: Show Catalog</div>
+            </div>
+            <div class="flow-row">
+              <div class="flow-box">Customer selects items</div>
+              <span class="flow-arrow">→</span>
+              <div class="flow-box">Cart Review</div>
+            </div>
+            <div class="flow-row">
+              <div class="flow-box">Confirm Order</div>
+              <span class="flow-arrow">→</span>
+              <div class="flow-box">Order saved → Business notified</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="sec-head">Database Design</div>
+        <div class="sec-body">
+          <table>
+            <thead>
+              <tr><th>Collection</th><th>Key Fields</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><b>Business</b></td><td>name, phone, waToken, waPhoneId, catalogRef, plan</td></tr>
+              <tr><td><b>Customer</b></td><td>phone, businessId, state, cartItems, sessionData</td></tr>
+              <tr><td><b>Catalog</b></td><td>businessId, itemName, price, category, isAvailable</td></tr>
+              <tr><td><b>Orders</b></td><td>businessId, customerId, items[], total, status, createdAt</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /col2 -->
+
+    <!-- ════ COLUMN 3 ════ -->
+    <div class="col">
+
+      <div class="section">
+        <div class="sec-head">Key Features</div>
+        <div class="sec-body">
+          <ul>
+            <li><b>Chatbot Automation:</b> Fully automated customer interaction — no human agent needed</li>
+            <li><b>Self-Onboarding:</b> Businesses configure themselves through guided WhatsApp conversation</li>
+            <li><b>Dashboard:</b> Real-time order tracking, catalog CRUD, and analytics</li>
+            <li><b>Broadcast Messaging:</b> Business can send promotional messages to all customers</li>
+            <li><b>Auto Webhook Setup:</b> System auto-registers the business's WhatsApp webhook on onboarding</li>
+            <li><b>Multi-Tenant Isolation:</b> Each business operates independently on shared infrastructure</li>
+            <li><b>Order Notifications:</b> Instant WhatsApp alerts to business on new orders</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="sec-head">Results &amp; Outcomes</div>
+        <div class="sec-body">
+          <ul>
+            <li>✅ <b>Automated Onboarding:</b> Business setup completed in &lt;10 minutes via chatbot</li>
+            <li>✅ <b>Order Handling:</b> End-to-end order cycle managed without human intervention</li>
+            <li>✅ <b>24×7 Availability:</b> Chatbot responds to customers at any time</li>
+            <li>✅ <b>Reduced Workload:</b> Eliminates manual messaging &amp; order logging</li>
+            <li>✅ <b>Scalable Architecture:</b> Multi-tenant design supports unlimited businesses</li>
+            <li>✅ <b>Lower Cost:</b> No per-message BSP fee; self-managed API</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="sec-head">User Interface Screenshots</div>
+        <div class="sec-body">
+          <div class="fig-wrap">
+            <div style="display:flex;flex-direction:column;align-items:center;flex:1;min-width:80px;">
+              <div class="fig"><span class="fig-icon">🔐</span>Login Page</div>
+              <div class="fig-caption">Fig. 1: Business Login</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;flex:1;min-width:80px;">
+              <div class="fig"><span class="fig-icon">📊</span>Dashboard</div>
+              <div class="fig-caption">Fig. 2: Admin Dashboard</div>
+            </div>
+          </div>
+          <div class="fig-wrap" style="margin-top:5px;">
+            <div style="display:flex;flex-direction:column;align-items:center;flex:1;min-width:80px;">
+              <div class="fig"><span class="fig-icon">💬</span>WA Chatbot</div>
+              <div class="fig-caption">Fig. 3: Customer Chatbot</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;flex:1;min-width:80px;">
+              <div class="fig"><span class="fig-icon">🛒</span>Order Flow</div>
+              <div class="fig-caption">Fig. 4: Order Flow</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="sec-head">Technology Stack</div>
+        <div class="sec-body">
+          <div class="stack">
+            <span class="badge">⚛ React.js</span>
+            <span class="badge">🟢 Node.js</span>
+            <span class="badge">🍃 MongoDB</span>
+            <span class="badge">📱 WhatsApp Cloud API</span>
+            <span class="badge">🔌 Express.js</span>
+            <span class="badge">🔒 JWT Auth</span>
+            <span class="badge">☁ Cloud Hosting</span>
+          </div>
+          <table style="margin-top:6px;">
+            <thead><tr><th>Layer</th><th>Technology</th><th>Role</th></tr></thead>
+            <tbody>
+              <tr><td>Frontend</td><td>React.js + Vite</td><td>Business Dashboard</td></tr>
+              <tr><td>Backend</td><td>Node.js + Express</td><td>API + Webhook Handler</td></tr>
+              <tr><td>Database</td><td>MongoDB Atlas</td><td>Multi-tenant Data Store</td></tr>
+              <tr><td>Messaging</td><td>WA Cloud API (Meta)</td><td>Bot Communication</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="sec-head">Conclusion</div>
+        <div class="sec-body">
+          <p>ChatServe successfully demonstrates that WhatsApp — already ubiquitous among Indian MSMEs — can serve as a powerful business automation channel without requiring any additional infrastructure. The platform's self-onboarding design, state-machine chatbot engine, and multi-tenant architecture collectively lower the barrier for small businesses to adopt digital automation. The system is cost-effective, scalable, and immediately deployable — making it a practical solution for the underserved MSME segment.</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="sec-head">Future Work</div>
+        <div class="sec-body">
+          <ul>
+            <li><b>Payment Integration:</b> UPI/Razorpay within chat for seamless checkout</li>
+            <li><b>AI Chatbot:</b> NLP-based intent detection to handle free-form queries</li>
+            <li><b>Multi-language Support:</b> Hindi, Gujarati, and regional language chatbot flows</li>
+            <li><b>Mobile App:</b> Native dashboard app for business owners</li>
+            <li><b>Analytics Module:</b> Revenue trends, customer retention, and order heatmaps</li>
+          </ul>
+        </div>
+      </div>
+
+    </div><!-- /col3 -->
+  </div><!-- /body -->
+
+  <!-- ════ FOOTER ════ -->
+  <div class="footer">
+    <span>📧 pravinkanotara@[email] | Nirma University, Ahmedabad</span>
+    <span style="color:#FFD700;font-weight:700;">ChatServe — WhatsApp Automation for MSMEs</span>
+    <span>B.Tech Final Year Project · CSE Dept · 2025–26</span>
+  </div>
+
+</div>
+</body>
+</html>

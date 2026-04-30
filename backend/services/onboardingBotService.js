@@ -724,7 +724,7 @@ const handleOnboardingMessage = async (
         } else {
           await sendFromMainBot(
             senderNumber,
-            `🍽️ *Let's add a new restaurant!*\n\n*What is your full name?*`,
+            `📋 *Let's add a new business!*\n\n*What is your full name?*`,
           );
         }
         return;
@@ -770,14 +770,14 @@ const showReturningUserMenu = async (senderNumber, completedSessions) => {
   const bizList = completedSessions
     .map(
       (s, i) =>
-        `${i + 1}. *${s.restaurant?.name || "Restaurant"}* — ${(s.restaurant?.status || "pending").replace(/_/g, " ")}`,
+        `${i + 1}. *${s.restaurant?.name || "Business"}* — ${(s.restaurant?.status || "pending").replace(/_/g, " ")}`,
     )
     .join("\n");
   await sendButtonFromMainBot(
     senderNumber,
-    `👋 *Welcome back!*\n\nYour registered restaurants:\n${bizList}\n\nWhat would you like to do?`,
+    `👋 *Welcome back!*\n\nYour registered businesses:\n${bizList}\n\nWhat would you like to do?`,
     [
-      { id: "add_new_business", title: "➕ Add Restaurant" },
+      { id: "add_new_business", title: "➕ Add Business" },
       { id: "go_to_dashboard", title: "📊 Go to Dashboard" },
     ],
   );
@@ -805,7 +805,7 @@ const sendDashboardLink = async (senderNumber) => {
 const sendWelcome = async (to) => {
   await sendFromMainBot(
     to,
-    `🍽️ *Welcome to ChatServe!*\n\nI'll help you set up your restaurant on our WhatsApp ordering platform.\n\nThis will take about 5-10 minutes.\n\n*What is your full name?*\n\n_(Type RESTART anytime to start over)_`,
+    `👋 *Welcome to ChatServe!*\n\nI'll help you set up your business on our WhatsApp automation platform.\n\nThis will take about 5-10 minutes.\n\n*What is your full name?*\n\n_(Type RESTART anytime to start over)_`,
   );
 };
 
@@ -830,7 +830,7 @@ const processStep = async (session, text, messageType, mediaUrl) => {
           await session.save();
           await sendFromMainBot(
             senderNumber,
-            `Nice to meet you, *${session.data.ownerName}*! 👋\n\n*What is your restaurant's name?*`,
+            `Nice to meet you, *${session.data.ownerName}*! 👋\n\n*What is your business name?*`,
           );
           return;
         }
@@ -849,7 +849,7 @@ const processStep = async (session, text, messageType, mediaUrl) => {
           await session.save();
           await sendFromMainBot(
             senderNumber,
-            `Nice to meet you, *${session.data.ownerName}*! 👋\n\n*What is your restaurant's name?*`,
+            `Nice to meet you, *${session.data.ownerName}*! 👋\n\n*What is your business name?*`,
           );
           return;
         }
@@ -877,7 +877,7 @@ const processStep = async (session, text, messageType, mediaUrl) => {
         await session.save();
         await sendFromMainBot(
           senderNumber,
-          `Nice to meet you, *${session.data.ownerName}*! 👋\n\n*What is your restaurant's name?*`,
+          `Nice to meet you, *${session.data.ownerName}*! 👋\n\n*What is your business name?*`,
         );
         break;
       }
@@ -886,7 +886,7 @@ const processStep = async (session, text, messageType, mediaUrl) => {
         if (!text || text.trim().length < 2) {
           await sendFromMainBot(
             senderNumber,
-            `Please enter a valid restaurant name.`,
+            `Please enter a valid business name.`,
           );
           return;
         }
@@ -895,7 +895,7 @@ const processStep = async (session, text, messageType, mediaUrl) => {
         await session.save();
         await sendFromMainBot(
           senderNumber,
-          `Great! *${session.data.restaurantName}* 🍴\n\n📱 *Which phone number do you want to use as your restaurant's WhatsApp Business number?*\n\nInclude country code (e.g. +91 98765 43210)\n\n⚠️ This is where customers will message to order.`,
+          `Great! *${session.data.restaurantName}* 🏢\n\n📱 *Which phone number do you want to use as your WhatsApp Business number?*\n\nInclude country code (e.g. +91 98765 43210)\n\n⚠️ This is where customers will message you.`,
         );
         break;
       }
@@ -934,7 +934,7 @@ const processStep = async (session, text, messageType, mediaUrl) => {
         await session.save();
         await sendFromMainBot(
           senderNumber,
-          `✅ Got it! We'll configure *${raw}* as your restaurant's WhatsApp Business number.\n\n📧 *What is your email address?*\n\n(Used to log into your dashboard)`,
+          `✅ Got it! We'll configure *${raw}* as your WhatsApp Business number.\n\n📧 *What is your email address?*\n\n(Used to log into your dashboard)`,
         );
         break;
       }
@@ -953,7 +953,7 @@ const processStep = async (session, text, messageType, mediaUrl) => {
         await session.save();
         await sendFromMainBot(
           senderNumber,
-          `📍 *What is your restaurant's address?*`,
+          `📍 *What is your business address?*`,
         );
         break;
       }
@@ -964,7 +964,7 @@ const processStep = async (session, text, messageType, mediaUrl) => {
         await session.save();
         await sendFromMainBot(
           senderNumber,
-          `📝 *Give a short description of your restaurant*\n\n(e.g., "Family-friendly Indian restaurant specializing in Mughlai cuisine")`,
+          `📝 *Give a short description of your business*\n\n(e.g., "Home salon specializing in bridal makeup" or "Local bakery with fresh pastries")`,
         );
         break;
       }
@@ -986,7 +986,7 @@ const processStep = async (session, text, messageType, mediaUrl) => {
         await session.save();
         await sendFromMainBot(
           senderNumber,
-          `🏷️ *What food categories does your restaurant offer?*\n\nSeparate with commas:\nNorth Indian, Chinese, Desserts, Beverages`,
+          `🏷️ *What categories does your business offer?*\n\nSeparate with commas:\ne.g. Haircuts, Coloring, Skincare`,
         );
         break;
       }
@@ -999,7 +999,7 @@ const processStep = async (session, text, messageType, mediaUrl) => {
         if (cats.length === 0) {
           await sendFromMainBot(
             senderNumber,
-            `Please enter at least one food category.`,
+            `Please enter at least one category.`,
           );
           return;
         }
@@ -1008,9 +1008,9 @@ const processStep = async (session, text, messageType, mediaUrl) => {
         await session.save();
         await sendButtonFromMainBot(
           senderNumber,
-          `🍽️ Now let's add your menu items.\n\nYou can add multiple items. Ready?`,
+          `📋 Now let's add your catalog items.\n\nYou can add multiple items. Ready?`,
           [
-            { id: "add_menu_yes", title: "✅ Add Menu Items" },
+            { id: "add_menu_yes", title: "✅ Add Items" },
             { id: "add_menu_skip", title: "⏭️ Skip for Now" },
           ],
         );
@@ -1028,7 +1028,7 @@ const processStep = async (session, text, messageType, mediaUrl) => {
           await session.save();
           await sendFromMainBot(
             senderNumber,
-            `📌 *Item Name?*\n(e.g., Butter Chicken)`,
+            `📌 *Item Name?*\n(e.g., Haircut, Laptop Stand)`,
           );
         }
         break;
@@ -1068,7 +1068,7 @@ const processStep = async (session, text, messageType, mediaUrl) => {
         session.currentMenuItem.price = price;
         session.step = "menu_item_category";
         await session.save();
-        const catList = (session.data.foodCategories || []).join(", ");
+        const catList = (session.data.categories || session.data.foodCategories || []).join(", ");
         await sendFromMainBot(
           senderNumber,
           `📂 *Category for "${session.currentMenuItem.name}"?*\n\nYour categories: ${catList}`,
@@ -1090,7 +1090,18 @@ const processStep = async (session, text, messageType, mediaUrl) => {
 
       case "menu_item_image": {
         if (messageType === "image" && mediaUrl) {
-          session.currentMenuItem.imageUrl = mediaUrl;
+          try {
+            const { downloadAndUploadMedia } = require("./whatsappService");
+            const cloudinaryUrl = await downloadAndUploadMedia(
+              mediaUrl,
+              process.env.MAIN_ACCESS_TOKEN,
+              'ChatServe/catalog',
+            );
+            session.currentMenuItem.imageUrl = cloudinaryUrl;
+          } catch (err) {
+            logger.warn("Catalog item image upload failed:", err.message);
+            // Continue without image
+          }
         }
         if (!session.data.menuItems) session.data.menuItems = [];
         session.data.menuItems.push({ ...session.currentMenuItem });
@@ -1161,7 +1172,7 @@ const processStep = async (session, text, messageType, mediaUrl) => {
 const askForLogo = async (to) => {
   await sendButtonFromMainBot(
     to,
-    `🖼️ *Would you like to upload your restaurant logo?*\n\nSend an image or skip.`,
+    `🖼️ *Would you like to upload your business logo?*\n\nSend an image or skip.`,
     [{ id: "logo_skip", title: "⏭️ Skip Logo" }],
   );
 };
@@ -1175,7 +1186,7 @@ const finalizeOnboarding = async (session) => {
   try {
     await sendFromMainBot(
       senderNumber,
-      `⏳ Setting up your restaurant... please wait a moment!`,
+      `⏳ Setting up your business... please wait a moment!`,
     );
 
     // 1. Find existing owner by email OR create new
@@ -1194,22 +1205,36 @@ const finalizeOnboarding = async (session) => {
       await owner.save();
     }
 
-    // 2. Create restaurant
-    const tenantId = generateTenantId(data.restaurantName);
-    const restaurant = new Restaurant({
-      owner: owner._id,
-      name: data.restaurantName,
-      description: data.description,
-      address: data.address,
-      email: data.email,
-      phone: data.targetBusinessNumber,
-      logoUrl: data.logoUrl,
-      foodCategories: data.foodCategories || [],
-      status: "pending_meta",
-      tenantId,
-      workingHours: parseWorkingHours(data.workingHours),
-    });
-    await restaurant.save();
+    // 2. Create restaurant (retry on duplicate tenantId)
+    let restaurant;
+    let retries = 3;
+    while (retries > 0) {
+      try {
+        const tenantId = generateTenantId(data.restaurantName);
+        restaurant = new Restaurant({
+          owner: owner._id,
+          name: data.restaurantName,
+          description: data.description,
+          address: data.address,
+          email: data.email,
+          phone: data.targetBusinessNumber,
+          logoUrl: data.logoUrl,
+          categories: data.categories || data.foodCategories || [],
+          status: "pending_meta",
+          tenantId,
+          workingHours: parseWorkingHours(data.workingHours),
+        });
+        await restaurant.save();
+        break; // success
+      } catch (saveErr) {
+        if (saveErr.code === 11000 && saveErr.keyPattern?.tenantId && retries > 1) {
+          retries--;
+          logger.warn(`Duplicate tenantId, retrying... (${retries} attempts left)`);
+          continue;
+        }
+        throw saveErr;
+      }
+    }
 
     // 3. Link restaurant to owner
     if (!owner.restaurant) {
@@ -1220,12 +1245,19 @@ const finalizeOnboarding = async (session) => {
       );
     }
 
-    // 4. Create WhatsApp config
+    // 4. Clean up any orphaned WhatsApp config for this number (e.g. from a
+    //    previous restaurant that was deleted via Compass without cascade)
+    const normalizedNum = data.normalizedNumber || normalizePhone(data.targetBusinessNumber);
+    await WhatsAppConfig.deleteMany({
+      normalizedNumber: normalizedNum,
+      restaurant: { $ne: restaurant._id },
+    });
+
+    // 4b. Create WhatsApp config
     const waConfig = new WhatsAppConfig({
       restaurant: restaurant._id,
       targetBusinessNumber: data.targetBusinessNumber,
-      normalizedNumber:
-        data.normalizedNumber || normalizePhone(data.targetBusinessNumber),
+      normalizedNumber: normalizedNum,
       signupStatus: "pending",
     });
     await waConfig.save();
@@ -1233,7 +1265,7 @@ const finalizeOnboarding = async (session) => {
     restaurant.whatsappConfig = waConfig._id;
     await restaurant.save();
 
-    // 5. Create menu categories and items
+    // 5. Create catalog categories and items
     if (data.menuItems && data.menuItems.length > 0) {
       const categoryMap = {};
       for (const item of data.menuItems) {
@@ -1287,14 +1319,20 @@ const finalizeOnboarding = async (session) => {
     } else {
       await sendFromMainBot(
         senderNumber,
-        `✅ New restaurant added to your existing account!\n\nLog in at: ${process.env.FRONTEND_URL}/login\nEmail: ${data.email}`,
+        `✅ New business added to your existing account!\n\nLog in at: ${process.env.FRONTEND_URL}/login\nEmail: ${data.email}`,
       );
     }
   } catch (err) {
+    // Enhanced error logging for debugging
     logger.error(
       "finalizeOnboarding error:",
-      err.response?.data || err.message,
-      err.stack,
+      JSON.stringify({
+        message: err.message,
+        code: err.code,
+        keyPattern: err.keyPattern,
+        keyValue: err.keyValue,
+        stack: err.stack,
+      }),
     );
     await sendFromMainBot(
       senderNumber,

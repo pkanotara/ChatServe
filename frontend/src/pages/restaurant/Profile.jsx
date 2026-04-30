@@ -25,7 +25,7 @@ export default function RestaurantProfile() {
         address: profile.address || '',
         email: profile.email || '',
         phone: profile.phone || '',
-        foodCategories: profile.foodCategories?.join(', ') || '',
+        categories: profile.categories?.join(', ') || '',
         workingHours: profile.workingHours || DAYS.map(day => ({ day, open: '09:00', close: '22:00', isOpen: true })),
       })
     }
@@ -34,7 +34,7 @@ export default function RestaurantProfile() {
   const save = useMutation({
     mutationFn: () => api.patch('/restaurant/profile', {
       ...form,
-      foodCategories: form.foodCategories.split(',').map(c => c.trim()).filter(Boolean),
+      categories: form.categories.split(',').map(c => c.trim()).filter(Boolean),
       workingHours: form.workingHours,
     }),
     onSuccess: () => { qc.invalidateQueries(['restaurant-profile']); toast.success('Profile saved!') },
@@ -45,7 +45,7 @@ export default function RestaurantProfile() {
     mutationFn: async () => {
       await api.patch('/restaurant/profile', {
         ...form,
-        foodCategories: form.foodCategories.split(',').map(c => c.trim()).filter(Boolean),
+        categories: form.categories.split(',').map(c => c.trim()).filter(Boolean),
         workingHours: form.workingHours,
       })
       await api.post('/restaurant/sync-whatsapp-profile')
@@ -101,13 +101,13 @@ export default function RestaurantProfile() {
   return (
     <div className="max-w-2xl space-y-6">
       <div>
-        <h2 className="font-bold text-xl text-zinc-900">Restaurant Profile</h2>
-        <p className="text-zinc-500 text-sm mt-0.5">Manage your restaurant details</p>
+        <h2 className="font-bold text-xl text-zinc-900">Business Profile</h2>
+        <p className="text-zinc-500 text-sm mt-0.5">Manage your business details</p>
       </div>
 
       {/* Restaurant ID Card */}
       <div className="card p-4">
-        <p className="text-xs font-medium text-zinc-500 mb-2">Restaurant ID</p>
+        <p className="text-xs font-medium text-zinc-500 mb-2">Business ID</p>
         <div className="flex items-center justify-between gap-3">
           <p className="font-mono text-sm text-zinc-900 break-all">{profile?._id}</p>
           <button
@@ -132,7 +132,7 @@ export default function RestaurantProfile() {
 
       {/* Logo */}
       <div className="card p-6">
-        <h3 className="font-semibold text-zinc-900 mb-4">Restaurant Logo</h3>
+        <h3 className="font-semibold text-zinc-900 mb-4">Business Logo</h3>
         <div className="flex items-center gap-5">
           <div className="relative">
             {(logoPreview || profile?.logoUrl)
@@ -159,7 +159,7 @@ export default function RestaurantProfile() {
               </button>
             )}
             <p className="text-xs text-zinc-400">
-              {isWhatsAppConfigured ? 'Shown on your WhatsApp Business profile' : 'Upload your restaurant logo'}
+              {isWhatsAppConfigured ? 'Shown on your WhatsApp Business profile' : 'Upload your business logo'}
             </p>
           </div>
         </div>
@@ -170,7 +170,7 @@ export default function RestaurantProfile() {
         <h3 className="font-semibold text-zinc-900 mb-1">Basic Information</h3>
         <div className="grid grid-cols-2 gap-4">
           <div className="col-span-2">
-            <label className="label">Restaurant Name</label>
+            <label className="label">Business Name</label>
             <input className="input" value={form.name}
               onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
             {isWhatsAppConfigured && <p className="text-xs text-zinc-400 mt-1">Shown as business name in WhatsApp</p>}
@@ -206,10 +206,10 @@ export default function RestaurantProfile() {
             <p className="text-xs text-zinc-400 mt-1">This is your WhatsApp Business number — cannot be changed here</p>
           </div>
           <div className="col-span-2">
-            <label className="label">Food Categories (comma-separated)</label>
-            <input className="input" value={form.foodCategories}
-              onChange={e => setForm(f => ({ ...f, foodCategories: e.target.value }))}
-              placeholder="North Indian, Chinese, Beverages" />
+            <label className="label">Categories (comma-separated)</label>
+            <input className="input" value={form.categories}
+              onChange={e => setForm(f => ({ ...f, categories: e.target.value }))}
+              placeholder="Haircare, Skincare, Beverages" />
           </div>
         </div>
       </div>

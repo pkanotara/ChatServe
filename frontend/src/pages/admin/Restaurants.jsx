@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
 import api from '../../services/api'
-import { Search, ChevronRight, ToggleLeft, ToggleRight, Loader2 } from 'lucide-react'
+import { Search, ChevronRight, ToggleLeft, ToggleRight, Loader2, Trash2 } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 const STATUS_COLORS = {
@@ -18,6 +18,7 @@ export default function AdminRestaurants() {
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState('')
   const [page, setPage] = useState(1)
+  const [confirmDeleteId, setConfirmDeleteId] = useState(null)
 
   const { data, isLoading } = useQuery({
     queryKey: ['admin-restaurants', search, statusFilter, page],
@@ -31,16 +32,29 @@ export default function AdminRestaurants() {
     mutationFn: ({ id, newStatus }) => api.patch(`/admin/restaurants/${id}/status`, { status: newStatus }),
     onSuccess: () => {
       qc.invalidateQueries(['admin-restaurants'])
-      toast.success('Restaurant status updated')
+      toast.success('Business status updated')
     },
     onError: () => toast.error('Failed to update status'),
+  })
+
+  const deleteRestaurant = useMutation({
+    mutationFn: (id) => api.delete(`/admin/restaurants/${id}`),
+    onSuccess: (res) => {
+      qc.invalidateQueries(['admin-restaurants'])
+      toast.success(res.data?.message || 'Business deleted successfully')
+      setConfirmDeleteId(null)
+    },
+    onError: () => {
+      toast.error('Failed to delete business')
+      setConfirmDeleteId(null)
+    },
   })
 
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="font-display text-xl font-bold text-surface-900">Restaurants</h2>
+          <h2 className="font-display text-xl font-bold text-surface-900">Businesses</h2>
           <p className="text-surface-500 text-sm mt-0.5">{data?.meta?.total ?? 0} total</p>
         </div>
       </div>
@@ -51,7 +65,7 @@ export default function AdminRestaurants() {
           <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-surface-400" />
           <input
             className="input pl-9"
-            placeholder="Search restaurants..."
+            placeholder="Search businesses..."
             value={search}
             onChange={e => { setSearch(e.target.value); setPage(1) }}
           />
@@ -72,7 +86,7 @@ export default function AdminRestaurants() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-surface-100 bg-surface-50">
-                <th className="text-left px-4 py-3 font-medium text-surface-500 text-xs uppercase tracking-wide">Restaurant</th>
+                <th className="text-left px-4 py-3 font-medium text-surface-500 text-xs uppercase tracking-wide">Business</th>
                 <th className="text-left px-4 py-3 font-medium text-surface-500 text-xs uppercase tracking-wide">Owner</th>
                 <th className="text-left px-4 py-3 font-medium text-surface-500 text-xs uppercase tracking-wide">WhatsApp</th>
                 <th className="text-left px-4 py-3 font-medium text-surface-500 text-xs uppercase tracking-wide">Status</th>
@@ -86,7 +100,7 @@ export default function AdminRestaurants() {
                   <Loader2 className="animate-spin mx-auto" size={24} />
                 </td></tr>
               ) : data?.data?.length === 0 ? (
-                <tr><td colSpan={6} className="text-center py-12 text-surface-400">No restaurants found</td></tr>
+                <tr><td colSpan={6} className="text-center py-12 text-surface-400">No businesses found</td></tr>
               ) : data?.data?.map(r => (
                 <tr key={r._id} className="hover:bg-surface-50 transition-colors">
                   <td className="px-4 py-3">
@@ -135,6 +149,13 @@ export default function AdminRestaurants() {
                         className="inline-flex items-center gap-1 text-xs text-brand-600 hover:text-brand-700 font-medium">
                         View <ChevronRight size={13} />
                       </Link>
+                      <button
+                        onClick={() => setConfirmDeleteId(r._id)}
+                        className="text-xs text-surface-400 hover:text-red-500 transition-colors"
+                        title="Delete business"
+                      >
+                        <Trash2 size={15} />
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -154,6 +175,44 @@ export default function AdminRestaurants() {
           </div>
         )}
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {confirmDeleteId && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50" onClick={() => setConfirmDeleteId(null)}>
+          <div className="bg-white rounded-2xl p-6 max-w-sm w-full mx-4 shadow-xl" onClick={e => e.stopPropagation()}>
+            <div className="text-center">
+              <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                <Trash2 size={22} className="text-red-500" />
+              </div>
+              <h3 className="font-semibold text-surface-900 text-lg">Delete Business?</h3>
+              <p className="text-surface-500 text-sm mt-2">
+                This will permanently delete the business and <strong>all related data</strong> — owner account, catalog, orders, customers, WhatsApp config, and logs.
+              </p>
+              <p className="text-red-500 text-xs font-semibold mt-2">This action cannot be undone.</p>
+            </div>
+            <div className="flex gap-3 mt-5">
+              <button
+                onClick={() => setConfirmDeleteId(null)}
+                className="btn-secondary flex-1 justify-center"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => deleteRestaurant.mutate(confirmDeleteId)}
+                disabled={deleteRestaurant.isPending}
+                className="btn-danger flex-1 justify-center"
+              >
+                {deleteRestaurant.isPending ? (
+                  <Loader2 size={14} className="animate-spin" />
+                ) : (
+                  <Trash2 size={14} />
+                )}
+                {deleteRestaurant.isPending ? 'Deleting...' : 'Delete'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

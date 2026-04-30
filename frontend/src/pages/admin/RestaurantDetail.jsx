@@ -1,4 +1,4 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import api from "../../services/api";
@@ -15,12 +15,14 @@ import {
   Copy,
   Check,
   KeyRound,
+  Trash2,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PasswordResetModal from "../../components/PasswordResetModal";
 
 export default function AdminRestaurantDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const qc = useQueryClient();
   const [showActivateForm, setShowActivateForm] = useState(false);
   const [activateForm, setActivateForm] = useState({
@@ -32,6 +34,7 @@ export default function AdminRestaurantDetail() {
   const [showTestForm, setShowTestForm] = useState(false);
   const [copiedId, setCopiedId] = useState(false);
   const [showPasswordReset, setShowPasswordReset] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   const { data: restaurant, isLoading } = useQuery({
     queryKey: ["admin-restaurant", id],
@@ -82,6 +85,17 @@ export default function AdminRestaurantDetail() {
     onError: (err) => toast.error(err.response?.data?.error || "Send failed"),
   });
 
+  const deleteRestaurant = useMutation({
+    mutationFn: () => api.delete(`/admin/restaurants/${id}`),
+    onSuccess: (res) => {
+      qc.invalidateQueries(["admin-restaurants"]);
+      toast.success(res.data.message || "Business deleted successfully");
+      navigate("/admin/restaurants");
+    },
+    onError: (err) =>
+      toast.error(err.response?.data?.error || "Failed to delete business"),
+  });
+
   const copyId = (text) => {
     navigator.clipboard.writeText(text);
     setCopiedId(true);
@@ -98,7 +112,7 @@ export default function AdminRestaurantDetail() {
   if (!restaurant)
     return (
       <div className="text-center py-12 text-zinc-400">
-        Restaurant not found
+        Business not found
       </div>
     );
 
@@ -135,7 +149,7 @@ export default function AdminRestaurantDetail() {
       {/* Restaurant ID Banner */}
       <div className="bg-zinc-50 border border-zinc-200 rounded-xl p-3 flex items-center justify-between">
         <div>
-          <p className="text-xs text-zinc-500 mb-0.5">Restaurant ID</p>
+          <p className="text-xs text-zinc-500 mb-0.5">Business ID</p>
           <p className="font-mono text-sm font-semibold text-zinc-900">{id}</p>
         </div>
         <button
@@ -257,10 +271,10 @@ export default function AdminRestaurantDetail() {
         <div className="card p-6 space-y-3">
           <div className="flex items-center gap-2 mb-1">
             <Store size={16} className="text-orange-500" />
-            <h3 className="font-semibold text-zinc-900">Restaurant Details</h3>
+            <h3 className="font-semibold text-zinc-900">Business Details</h3>
           </div>
           <InfoRow
-            label="Restaurant ID"
+            label="Business ID"
             value={id}
             mono
             copyable
@@ -272,7 +286,7 @@ export default function AdminRestaurantDetail() {
           <InfoRow label="Email" value={restaurant.email} />
           <InfoRow
             label="Categories"
-            value={restaurant.foodCategories?.join(", ")}
+            value={restaurant.categories?.join(", ")}
           />
           <InfoRow label="Tenant ID" value={restaurant.tenantId} mono />
         </div>
@@ -428,7 +442,7 @@ export default function AdminRestaurantDetail() {
                 disabled={toggleStatus.isPending}
                 className="btn-danger w-full justify-center"
               >
-                <XCircle size={16} /> Deactivate Restaurant
+                <XCircle size={16} /> Deactivate Business
               </button>
             ) : (
               <button
@@ -436,7 +450,7 @@ export default function AdminRestaurantDetail() {
                 disabled={toggleStatus.isPending}
                 className="btn-primary w-full justify-center"
               >
-                <CheckCircle2 size={16} /> Activate Restaurant
+                <CheckCircle2 size={16} /> Activate Business
               </button>
             )}
             <button
@@ -451,6 +465,46 @@ export default function AdminRestaurantDetail() {
             >
               <KeyRound size={14} /> Reset Owner Password
             </button>
+
+            {/* Delete Business */}
+            <div className="pt-3 border-t border-zinc-100">
+              {!confirmDelete ? (
+                <button
+                  onClick={() => setConfirmDelete(true)}
+                  className="btn-danger w-full justify-center text-xs"
+                >
+                  <Trash2 size={14} /> Delete Business Permanently
+                </button>
+              ) : (
+                <div className="space-y-2">
+                  <p className="text-xs text-red-600 font-semibold text-center">
+                    ⚠️ This will permanently delete the business and ALL related data
+                    (owner, catalog, orders, customers, WhatsApp config, logs).
+                    This action cannot be undone.
+                  </p>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => deleteRestaurant.mutate()}
+                      disabled={deleteRestaurant.isPending}
+                      className="btn-danger flex-1 justify-center text-xs"
+                    >
+                      {deleteRestaurant.isPending ? (
+                        <Loader2 size={13} className="animate-spin" />
+                      ) : (
+                        <Trash2 size={13} />
+                      )}
+                      {deleteRestaurant.isPending ? "Deleting..." : "Yes, Delete Everything"}
+                    </button>
+                    <button
+                      onClick={() => setConfirmDelete(false)}
+                      className="btn-secondary flex-1 justify-center text-xs"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
