@@ -49,7 +49,7 @@ It solves two connected problems:
 
 ## 3) Core product flows
 
-## A) Owner onboarding flow (main bot)
+### A) Owner onboarding flow (main bot)
 1. Incoming webhook hits `/api/webhook`.
 2. If message is to `MAIN_PHONE_NUMBER_ID`, backend routes to `handleOnboardingMessage`.
 3. `OnboardingSession` tracks conversational step-by-step data collection:
@@ -64,7 +64,7 @@ It solves two connected problems:
 6. Callback `/api/embedded-signup/callback` resolves token + WABA + phone number ID and runs post-signup automation.
 7. Restaurant becomes active, bot enabled, owner notified.
 
-## B) Embedded Signup automation flow
+### B) Embedded Signup automation flow
 - Exchanges OAuth code for token, optionally upgrades to long-lived token
 - Resolves WABA ID using multiple fallbacks (`/me/whatsapp_business_accounts`, businesses graph, debug token scopes)
 - Resolves exact phone number ID (supports selected phone number from session metadata)
@@ -77,7 +77,7 @@ It solves two connected problems:
   - restaurant activation
   - owner notification + activity log
 
-## C) Customer ordering flow (restaurant bot)
+### C) Customer ordering flow (restaurant bot)
 1. Incoming webhook to restaurant number ID (not main number).
 2. Backend finds `WhatsAppConfig` with `botEnabled + configured`.
 3. `buildContext` loads restaurant + customer state; creates customer if first interaction.
